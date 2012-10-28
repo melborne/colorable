@@ -8,9 +8,21 @@ module Colorable::Converter
   end
 
   def rgb2name(rgb)
-    raise ArgumentError, "'#{rgb}' is irregal for a RGB value" unless valid_rgb?(rgb)
+    raise ArgumentError, "'#{rgb}' is invalid for a RGB value" unless valid_rgb?(rgb)
     color = COLORNAMES.rassoc(rgb)
     color ? color[0] : nil
+  end
+
+  def rgb2hsb(rgb)
+    raise ArgumentError, "'#{rgb}' is invalid for a RGB value" unless valid_rgb?(rgb)
+    r, g, b = rgb.map(&:to_f)
+    hue = Math.atan2(Math.sqrt(3)*(g-b), 2*r-g-b).to_degree
+
+    min, max = [r, g, b].minmax
+    sat = [min, max].all?(&:zero?) ? 0.0 : ((max - min) / max * 100)
+
+    bright = max / 2.55
+    [hue, sat, bright].map(&:round)
   end
 
   def valid_rgb?(rgb)
@@ -18,10 +30,6 @@ module Colorable::Converter
   end
   private :valid_rgb?
   
-  def rgb2hsb
-    
-  end
-
   def hsb2rgb
     
   end
@@ -34,6 +42,9 @@ module Colorable::Converter
     
   end
   
+  
+  # luminance = ( 0.298912 * r + 0.586611 * g + 0.114478 * b );
+
   # Based on X11 color names - Wikipedia, the free encyclopedia
   # http://en.wikipedia.org/wiki/X11_color_names
   # When W3C color conflict with X11, a name of the color is appended with '2'.
