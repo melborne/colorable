@@ -25,13 +25,21 @@ module Colorable::Converter
     [hue, sat, bright].map(&:round)
   end
 
-  def valid_rgb?(rgb)
-    rgb.all? { |val| val.between?(0, 255) }
-  end
-  private :valid_rgb?
-  
-  def hsb2rgb
-    
+  def hsb2rgb(hsb)
+    raise ArgumentError, "'#{hsb}' is invalid for a HSB value" unless valid_hsb?(hsb)
+    hue, sat, bright = hsb
+    norm = ->range{ hue.norm(range, 0..255) }
+    rgb_h =
+      case hue
+      when 0..60    then [255, norm[0..60], 0]
+      when 60..120  then [255-norm[60..120], 255, 0]
+      when 120..180 then [0, 255, norm[120..180]]
+      when 180..240 then [0, 255-norm[180..240], 255]
+      when 240..300 then [norm[240..300], 0, 255]
+      when 300..360 then [255, 0, 255-norm[300.360]]
+      end
+    rgb_s = rgb_h.map { |val| val + (255-val) * (1-sat/100.0) }
+    rgb_s.map { |val| (val * bright/100.0).round }
   end
 
   def rgb2hex
@@ -40,6 +48,16 @@ module Colorable::Converter
 
   def hex2rgb
     
+  end
+  
+  private
+  def valid_rgb?(rgb)
+    rgb.all? { |val| val.between?(0, 255) }
+  end
+
+  def valid_hsb?(hsb)
+    h, *sb = hsb
+    h.between?(0, 360) && sb.all? { |val| val.between?(0, 100) }
   end
   
   

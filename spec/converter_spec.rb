@@ -58,7 +58,21 @@ describe Colorable::Converter do
   end
 
   describe "#hsb2rgb" do
-    
+    context "when a valid hsb" do
+      it "returns a RGB value" do
+        hsb2rgb([208, 6, 100]).should eql [240, 248, 255]
+        hsb2rgb([300, 12, 85]).should eql [217, 191, 217] # hava a margin of error
+        hsb2rgb([55, 42, 94]).should eql [240, 231, 139]  # hava a margin of error
+      end
+    end
+
+    context "when a invalid hsb" do
+      it "raise ArgumentError" do
+        expect { hsb2rgb([-100, 50, 50]) }.to raise_error ArgumentError
+        expect { hsb2rgb([350, 101, 50]) }.to raise_error ArgumentError
+        expect { hsb2rgb([0, 50, -50]) }.to raise_error ArgumentError
+      end
+    end
   end
 
   describe "#rgb2hex" do
