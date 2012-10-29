@@ -8,12 +8,12 @@ module Colorable::Converter
   end
 
   def rgb2name(rgb)
-    raise ArgumentError, "'#{rgb}' is invalid for a RGB value" unless valid_rgb?(rgb)
+    validate_rgb(rgb)
     COLORNAMES.rassoc(rgb).tap { |c, rgb| break c if c }
   end
 
   def rgb2hsb(rgb)
-    raise ArgumentError, "'#{rgb}' is invalid for a RGB value" unless valid_rgb?(rgb)
+    validate_rgb(rgb)
     r, g, b = rgb.map(&:to_f)
     hue = Math.atan2(Math.sqrt(3)*(g-b), 2*r-g-b).to_degree
 
@@ -25,7 +25,7 @@ module Colorable::Converter
   end
 
   def hsb2rgb(hsb)
-    raise ArgumentError, "'#{hsb}' is invalid for a HSB value" unless valid_hsb?(hsb)
+    validate_hsb(hsb)
     hue, sat, bright = hsb
     norm = ->range{ hue.norm(range, 0..255) }
     rgb_h =
@@ -42,7 +42,7 @@ module Colorable::Converter
   end
 
   def rgb2hex(rgb)
-    raise ArgumentError, "'#{rgb}' is invalid for a RGB value" unless valid_rgb?(rgb)
+    validate_rgb(rgb)
     hex = rgb.map do |val|
       val.to_s(16).tap { |h| break "0#{h}" if h.size==1 }
     end
@@ -54,13 +54,21 @@ module Colorable::Converter
   end
   
   private
-  def valid_rgb?(rgb)
-    rgb.all? { |val| val.between?(0, 255) }
+  def validate_rgb(rgb)
+    if rgb.all? { |val| val.between?(0, 255) }
+      true
+    else
+      raise ArgumentError, "'#{rgb}' is invalid for a RGB value"
+    end
   end
 
-  def valid_hsb?(hsb)
+  def validate_hsb(hsb)
     h, *sb = hsb
-    h.between?(0, 360) && sb.all? { |val| val.between?(0, 100) }
+    if h.between?(0, 360) && sb.all? { |val| val.between?(0, 100) } 
+      true
+    else
+      raise ArgumentError, "'#{hsb}' is invalid for a HSB value"
+    end
   end
   
   
