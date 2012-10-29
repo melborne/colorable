@@ -76,7 +76,19 @@ describe Colorable::Converter do
   end
 
   describe "#rgb2hex" do
-    
+    context "when a valid rgb" do
+      it "returns a HEX value" do
+        rgb2hex([240, 248, 255]).should eql '#F0F8FF'
+        rgb2hex([216, 191, 216]).should eql '#D8BFD8'
+        rgb2hex([240, 230, 140]).should eql '#F0E68C'
+      end
+    end
+
+    context "when a invalid rgb" do
+      it "raise ArgumentError" do
+        expect { rgb2hex([100, 100, -10]) }.to raise_error ArgumentError
+      end
+    end
   end
 
   describe "#hex2rgb" do

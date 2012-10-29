@@ -9,8 +9,7 @@ module Colorable::Converter
 
   def rgb2name(rgb)
     raise ArgumentError, "'#{rgb}' is invalid for a RGB value" unless valid_rgb?(rgb)
-    color = COLORNAMES.rassoc(rgb)
-    color ? color[0] : nil
+    COLORNAMES.rassoc(rgb).tap { |c, rgb| break c if c }
   end
 
   def rgb2hsb(rgb)
@@ -42,8 +41,12 @@ module Colorable::Converter
     rgb_s.map { |val| (val * bright/100.0).round }
   end
 
-  def rgb2hex
-    
+  def rgb2hex(rgb)
+    raise ArgumentError, "'#{rgb}' is invalid for a RGB value" unless valid_rgb?(rgb)
+    hex = rgb.map do |val|
+      val.to_s(16).tap { |h| break "0#{h}" if h.size==1 }
+    end
+    '#' + hex.join.upcase
   end
 
   def hex2rgb
