@@ -49,8 +49,10 @@ module Colorable::Converter
     '#' + hex.join.upcase
   end
 
-  def hex2rgb
-    
+  def hex2rgb(hex)
+    validate_hex(hex)
+    _, *hex = hex.unpack('A1A2A2A2')
+    hex.map { |val| val.to_i(16) }
   end
   
   private
@@ -71,6 +73,13 @@ module Colorable::Converter
     end
   end
   
+  def validate_hex(hex)
+    if hex.match(/^#[0-9A-F]{6}$/)
+      true
+    else
+      raise ArgumentError, "'#{hex}' is invalid for a HEX value"
+    end
+  end
   
   # luminance = ( 0.298912 * r + 0.586611 * g + 0.114478 * b );
 
