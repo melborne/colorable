@@ -107,4 +107,21 @@ describe Colorable::Converter do
       end
     end
   end
+
+  describe "#rgb2hsl" do
+    context "when a valid rgb" do
+      it "returns a HSL value" do
+        expect { rgb2hsl([240, 248, 255]) }.to raise_error NotImplemented
+        # rgb2hsl([240, 248, 255]).should eql [208, 100, 97]
+        # rgb2hsl([216, 191, 216]).should eql [300, 24, 80]
+        # rgb2hsl([240, 230, 140]).should eql [55, 77, 75]
+      end
+    end
+
+    context "when a invalid rgb" do
+      it "raise ArgumentError" do
+        expect { rgb2hsb([100, 100, -10]) }.to raise_error ArgumentError
+      end
+    end
+  end
 end
