@@ -74,7 +74,7 @@ module Colorable::Converter
   private
   def validate_rgb(rgb)
     if rgb.all? { |val| val.between?(0, 255) }
-      true
+      rgb
     else
       raise ArgumentError, "'#{rgb}' is invalid for a RGB value"
     end
@@ -83,15 +83,15 @@ module Colorable::Converter
   def validate_hsb(hsb)
     h, *sb = hsb
     if h.between?(0, 360) && sb.all? { |val| val.between?(0, 100) } 
-      true
+      hsb
     else
       raise ArgumentError, "'#{hsb}' is invalid for a HSB value"
     end
   end
   
   def validate_hex(hex)
-    if hex.match(/^#[0-9A-F]{6}$/)
-      true
+    if hex.match(/^#[0-9A-F]{6}$/i)
+      hex.upcase
     else
       raise ArgumentError, "'#{hex}' is invalid for a HEX value"
     end
