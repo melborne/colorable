@@ -2,6 +2,7 @@ class Colorable::Color
   class ColorNameError < StandardError; end
   include Colorable::Converter
   attr_reader :name, :rgb
+
   def initialize(name_or_rgb)
     @name, @rgb, @hex, @hsb, @esc = nil
     case name_or_rgb
@@ -14,6 +15,18 @@ class Colorable::Color
     else
       raise ArgumentError, "'#{name_or_rgb}' is wrong argument. Only colorname and RGB value are acceptable"
     end
+  end
+
+  def to_s
+    "rgb(%i,%i,%i)" % rgb
+  end
+
+  def hex
+    @hex ||= rgb2hex(rgb)
+  end
+
+  def hsb
+    @hsb ||= rgb2hsb(rgb)
   end
 
   private

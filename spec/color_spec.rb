@@ -43,6 +43,21 @@ describe Colorable::Color do
       end
     end
   end
+
+  context "#hex" do
+    it { color.new("Alice Blue").hex.should eql "#F0F8FF" }
+    it { color.new("Khaki").hex.should eql "#F0E68C" }
+    it { color.new("Mint Cream").hex.should eql "#F5FFFA" }
+    it { color.new("Thistle").hex.should eql "#D8BFD8" }
+  end
+
+  context "#hsb" do
+    it { color.new("Alice Blue").hsb.should eql [208, 6, 100] }
+    it { color.new("Khaki").hsb.should eql [55, 42, 94] }
+    it { color.new("Mint Cream").hsb.should eql [150, 4, 100] }
+    it { color.new("Thistle").hsb.should eql [300, 12, 85] }
+  end
+
 end
 
 
