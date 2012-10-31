@@ -11,3 +11,9 @@ class Numeric
     unit * (tgr.max - tgr.min) + tgr.min
   end
 end
+
+class Array
+  def same?(&blk)
+    self.uniq(&blk).size==1
+  end
+end
