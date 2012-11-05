@@ -29,6 +29,14 @@ class Colorable::Color
     @hsb ||= rgb2hsb(rgb)
   end
 
+  %w(red green blue).each_with_index do |c, i|
+    define_method(c) { rgb[i] }
+  end
+
+  %w(hue sat bright).each_with_index do |n, i|
+    define_method(n) { hsb[i] }
+  end
+
   private
   def varidate_name(name)
     COLORNAMES.detect do |label, _|
