@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["postagie@gmail.com"]
   gem.description   = %q{A simple color handler which provide a conversion between colorname, RGB, HSB and HEX}
   gem.summary       = %q{A simple color handler which provide a conversion between colorname, RGB, HSB and HEX}
-  gem.homepage      = ""
+  gem.homepage      = "https://github.com/melborne/colorable"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
