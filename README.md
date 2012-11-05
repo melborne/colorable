@@ -1,6 +1,6 @@
 # Colorable
 
-TODO: Write a gem description
+A simple color handler which provide a conversion between colorname, RGB, HSB and HEX. It also provides a colorset which can be sorted by above color units.
 
 ## Installation
 
@@ -18,7 +18,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+
 
 ## Contributing
 

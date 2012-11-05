@@ -8,8 +8,8 @@ Gem::Specification.new do |gem|
   gem.version       = Colorable::VERSION
   gem.authors       = ["kyoendo"]
   gem.email         = ["postagie@gmail.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = %q{A simple color handler which provide a conversion between colorname, RGB, HSB and HEX}
+  gem.summary       = %q{A simple color handler which provide a conversion between colorname, RGB, HSB and HEX}
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($/)
