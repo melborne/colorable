@@ -10,7 +10,7 @@ module Colorable
 
     def rgb2name(rgb)
       validate_rgb(rgb)
-      COLORNAMES.rassoc(rgb).tap { |c, rgb| break c if c }
+      COLORNAMES.rassoc(rgb).tap { |c, _| break c if c }
     end
 
     def rgb2hsb(rgb)
