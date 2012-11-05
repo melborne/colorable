@@ -57,13 +57,4 @@ describe Colorable::Color do
     it { color.new("Mint Cream").hsb.should eql [150, 4, 100] }
     it { color.new("Thistle").hsb.should eql [300, 12, 85] }
   end
-
 end
-
-
-__END__
-
-name2rgb("Alice Blue").should eql [240, 248, 255]
-name2rgb("Khaki").should eql [240, 230, 140]
-name2rgb("Mint Cream").should eql [245, 255, 250]
-name2rgb("Thistle").should eql [216, 191, 216]
