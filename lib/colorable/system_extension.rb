@@ -16,4 +16,9 @@ class Array
   def same?(&blk)
     self.uniq(&blk).size==1
   end
+
+  def move_to_top(idx)
+    arr = self.dup
+    arr.insert 0, arr.delete_at(idx)
+  end
 end
