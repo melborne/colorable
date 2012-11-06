@@ -41,7 +41,7 @@ module Colorable
     end
 
     def at(pos=0)
-      @colorset[pos]
+      @colorset[pos%size]
     end
 
     def next(n=1)
@@ -65,6 +65,10 @@ module Colorable
 
     def first(n=1)
       @colorset.first(n)
+    end
+
+    def find_index(color)
+      @colorset.find_index { |c| c == color }
     end
 
     def sort_by(&blk)

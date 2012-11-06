@@ -44,17 +44,57 @@ describe Colorable::Color do
     end
   end
 
-  context "#hex" do
+  describe "#hex" do
     it { color.new("Alice Blue").hex.should eql "#F0F8FF" }
     it { color.new("Khaki").hex.should eql "#F0E68C" }
     it { color.new("Mint Cream").hex.should eql "#F5FFFA" }
     it { color.new("Thistle").hex.should eql "#D8BFD8" }
   end
 
-  context "#hsb" do
+  describe "#hsb" do
     it { color.new("Alice Blue").hsb.should eql [208, 6, 100] }
     it { color.new("Khaki").hsb.should eql [55, 42, 94] }
     it { color.new("Mint Cream").hsb.should eql [150, 4, 100] }
     it { color.new("Thistle").hsb.should eql [300, 12, 85] }
   end
+
+  describe "#next" do
+    context "when no argument" do
+      it "returns next color in name order" do
+        @c = color.new("khaki")
+        @c.next.name.should eql "Lavender"
+      end
+    end
+
+    context "when :hsb passed" do
+      it "returns next color in hsb order" do
+        @c = color.new("khaki")
+        @c.next(:hsb).name.should eql "Dark Khaki"
+      end
+    end
+
+    context "when color is not in X11 colorset" do
+      it "returns nil" do
+        @c = color.new([100,10,10])
+        @c.next.should be_nil
+      end
+    end
+  end
+
+  describe "#prev" do
+    context "when no argument" do
+      it "returns prev color in name order" do
+        @c = color.new("Alice Blue")
+        @c.prev.name.should eql "Yellow Green"
+      end
+    end
+
+    context "when :hsb passed" do
+      it "returns prev color in hsb order" do
+        @c = color.new("Yellow")
+        @c.prev(:hsb).name.should eql "Olive"
+      end
+    end
+  end
+
 end

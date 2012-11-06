@@ -2,6 +2,7 @@ module Colorable
   class Color
     class ColorNameError < StandardError; end
     include Colorable::Converter
+    include Comparable
     attr_reader :name, :rgb
 
     def initialize(name_or_rgb)
@@ -37,6 +38,20 @@ module Colorable
 
     %w(hue sat bright).each_with_index do |n, i|
       define_method(n) { hsb[i] }
+    end
+
+    def <=>(other)
+      self.rgb <=> other.rgb
+    end
+
+    def next(set=:name, n=1)
+      colorset = Colorable::Colorset[set]
+      idx = colorset.find_index(self)
+      colorset.at(idx+n) if idx
+    end
+
+    def prev(set=:name, n=1)
+      self.next(set, -n)
     end
 
     private
