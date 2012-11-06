@@ -41,6 +41,12 @@ describe Colorable::Colorset do
       it { @cs.at.to_s.should eql 'rgb(0,0,0)' }
       it { @cs.at(1).to_s.should eql 'rgb(0,0,128)' }
     end
+
+    context "when argument exceed colorset size" do
+      it "acts like linked list" do
+        colorset.new.at(144).name.should eql "Alice Blue"
+      end
+    end
   end
 
   describe "#next" do
@@ -62,5 +68,11 @@ describe Colorable::Colorset do
   describe "#rewind" do
     before(:all) { @cs = colorset.new }
     it { @cs.next(10); @cs.rewind.should eql @cs.at }
+  end
+
+  describe "#size" do
+    it "returns size of colorset" do
+      colorset.new.size.should eql 144
+    end
   end
 end
