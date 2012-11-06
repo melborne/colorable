@@ -9,7 +9,7 @@ module Colorable
     end
 
     # +Colorset[:order]+ create a ordered colorset by passing a order key.
-    def self.[](order, dir=:+)
+    def self.[](order, dir=:+, colorset=nil)
       rgb = [:red, :green, :blue]
       hsb = [:hue, :sat, :bright]
       blk =
@@ -24,9 +24,9 @@ module Colorable
 
       case dir
       when :+
-        new.sort_by(&blk)
+        new(colorset).sort_by(&blk)
       when :-
-        new.sort_by(&blk).reverse
+        new(colorset).sort_by(&blk).reverse
       else
         raise ArgumentError, "it must ':+' or ':-'"
       end
@@ -36,17 +36,21 @@ module Colorable
       @colorset.each(&blk)
     end
 
+    def size
+      @colorset.size
+    end
+
     def at(pos=0)
       @colorset[pos]
     end
 
     def next(n=1)
-      @pos += n
+      @pos = (@pos+n)%size
       at @pos
     end
 
     def prev(n=1)
-      @pos -= n
+      @pos = (@pos-n)%size
       at @pos
     end
 
@@ -69,6 +73,10 @@ module Colorable
 
     def reverse
       self.class.new @colorset.reverse
+    end
+ 
+    def to_a
+      @colorset
     end
   end
 end
