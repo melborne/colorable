@@ -44,10 +44,11 @@ module Colorable
       self.rgb <=> other.rgb
     end
 
+    @@colorset = {}
     def next(set=:name, n=1)
-      colorset = Colorable::Colorset[set]
-      idx = colorset.find_index(self)
-      colorset.at(idx+n) if idx
+      @@colorset[set] ||= Colorable::Colorset[set]
+      idx = @@colorset[set].find_index(self)
+      @@colorset[set].at(idx+n) if idx
     end
 
     def prev(set=:name, n=1)
