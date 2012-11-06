@@ -29,6 +29,7 @@ module Colorable
     def hsb
       @hsb ||= rgb2hsb(rgb)
     end
+    alias :hsv :hsb
 
     %w(red green blue).each_with_index do |c, i|
       define_method(c) { rgb[i] }
