@@ -41,7 +41,7 @@ module Colorable
     end
 
     def <=>(other)
-      self.rgb <=> other.rgb
+      self.name <=> other.name
     end
 
     @@colorset = {}
