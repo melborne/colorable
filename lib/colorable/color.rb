@@ -55,6 +55,10 @@ module Colorable
       self.next(set, -n)
     end
 
+    def dark?
+      DARK_COLORS.detect { |d| d == self.name }
+    end
+
     private
     def varidate_name(name)
       COLORNAMES.detect do |label, _|
