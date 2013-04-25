@@ -41,22 +41,22 @@ module Colorable
     end
 
     def at(pos=0)
-      @colorset[pos%size]
+      @colorset[(@pos+pos)%size]
     end
 
     def next(n=1)
       @pos = (@pos+n)%size
-      at @pos
+      at
     end
 
     def prev(n=1)
       @pos = (@pos-n)%size
-      at @pos
+      at
     end
 
     def rewind
       @pos = 0
-      at @pos
+      at
     end
   
     def last(n=1)
@@ -82,5 +82,10 @@ module Colorable
     def to_a
       @colorset
     end
+
+    def to_s
+      "#<%s %d/%d pos='%s:%s'>" % [:Colorset, @pos, size, at.name, at]
+    end
+    alias :inspect :to_s
   end
 end
