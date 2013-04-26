@@ -22,7 +22,6 @@ module Colorable
     def to_s
       "rgb(%i,%i,%i)" % rgb
     end
-    alias :inspect :to_s
 
     def hex
       @hex ||= rgb2hex(rgb)
