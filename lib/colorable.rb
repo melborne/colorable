@@ -1,5 +1,5 @@
 require "colorable/version"
-%w(system_extension converter color colorset).each { |lib| require_relative "colorable/" + lib }
+%w(system_extension converter color colorset color_space).each { |lib| require_relative "colorable/" + lib }
 
 module Colorable
 
