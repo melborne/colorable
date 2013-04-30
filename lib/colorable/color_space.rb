@@ -13,9 +13,26 @@ module Colorable
 			rgb
 		end
 
-		def +(args)
-			new_rgb = self.rgb.zip(args).map { |x, y| x + y }
+		# Pass Array of [r, g, b] or a Fixnum.
+		# Returns new RGB object with added RGB.
+		def +(arg)
+			arg =
+				case arg
+				when Fixnum
+					[arg] * 3
+				when Array
+					raise ArgumentError, "Must be three numbers contained" unless arg.size==3
+					arg
+				else
+					raise ArgumentError, "Accept only Array of three numbers or a Fixnum"
+				end
+			new_rgb = self.rgb.zip(arg).map { |x, y| x + y }
 			self.class.new *validate_rgb(*new_rgb)
+		end
+
+		def -(arg)
+			arg = arg.is_a?(Fixnum) ? -arg : arg.map(&:-@)
+			self + arg
 		end
 		
 		private

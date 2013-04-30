@@ -38,10 +38,43 @@ describe Colorable::RGB do
   	  it "keep original same" do @rgb.rgb.should eql [100, 100, 100] end
   	end
 
-  	context "when '+' makes out of RGB range" do
+  	context "when '+' makes out of RGB range or rack of numbers" do
   		it "raise RGBRangeError" do
 	  		expect { rgb.new(100, 100, 100) + [0, 50, 200] }.to raise_error Colorable::RGBRangeError
 	  		expect { rgb.new(100, 100, 100) + [0, -150, 0] }.to raise_error Colorable::RGBRangeError
+	  		expect { rgb.new(100, 100, 100) + [0, 150] }.to raise_error ArgumentError
+  		end
+  	end
+
+  	context "pass a Fixnum" do
+  		before(:all) { @rgb = rgb.new(100, 100, 100) }
+  		it { (@rgb + 50).rgb.should eql [150, 150, 150] }
+  		it "raise RGBRangeError" do
+  		  expect { @rgb + 160 }.to raise_error Colorable::RGBRangeError
+  		end
+  	end
+  end
+
+  describe "#-" do
+  	context "pass an array of numbers" do
+  		before(:all) { @rgb = rgb.new(100, 100, 100) }
+  	  subject { @rgb - [0, 50, 100] }
+  	  its(:rgb) { should eql [100, 50, 0] }
+  	  it "keep original same" do @rgb.rgb.should eql [100, 100, 100] end
+  	end
+
+  	context "when '-' makes out of RGB range" do
+  		it "raise RGBRangeError" do
+	  		expect { rgb.new(100, 100, 100) - [0, 50, 200] }.to raise_error Colorable::RGBRangeError
+	  		expect { rgb.new(100, 100, 100) - [0, -250, 0] }.to raise_error Colorable::RGBRangeError
+  		end
+  	end
+
+  	context "pass a Fixnum" do
+  		before(:all) { @rgb = rgb.new(100, 100, 100) }
+  		it { (@rgb - 50).rgb.should eql [50, 50, 50] }
+  		it "raise RGBRangeError" do
+  		  expect { @rgb - 160 }.to raise_error Colorable::RGBRangeError
   		end
   	end
   end
