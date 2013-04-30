@@ -1,12 +1,17 @@
+require "forwardable"
+
 module Colorable
   class Colorset
     include Enumerable
+    extend Forwardable
 
     def initialize(colorset=nil)
       @pos = 0
       @colorset =
         colorset || COLORNAMES.map { |name, rgb| Colorable::Color.new(name) }
     end
+
+    def_delegators :@colorset, :size, :first, :last, :to_a
 
     # +Colorset[:order]+ create a ordered colorset by passing a order key.
     def self.[](order, dir=:+, colorset=nil)
@@ -36,10 +41,6 @@ module Colorable
       @colorset.each(&blk)
     end
 
-    def size
-      @colorset.size
-    end
-
     def at(pos=0)
       @colorset[(@pos+pos)%size]
     end
@@ -59,16 +60,9 @@ module Colorable
       at
     end
   
-    def last(n=1)
-      @colorset.last(n)
-    end
-
-    def first(n=1)
-      @colorset.first(n)
-    end
-
     def find_index(color)
-      @colorset.find_index { |c| c == color }
+      idx = @colorset.find_index { |c| c == color }
+      (@pos+idx)%size if idx
     end
 
     def sort_by(&blk)
@@ -79,10 +73,6 @@ module Colorable
       self.class.new @colorset.reverse
     end
  
-    def to_a
-      @colorset
-    end
-
     def to_s
       "#<%s %d/%d pos='%s:%s'>" % [:Colorset, @pos, size, at.name, at]
     end

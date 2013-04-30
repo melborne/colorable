@@ -13,13 +13,13 @@ describe Colorable::Colorset do
     context "when :rgb passed" do
       before(:all) { @cs = colorset[:rgb] }
       it { @cs.take(3).map(&:to_s).should eql ['rgb(0,0,0)', 'rgb(0,0,128)', 'rgb(0,0,139)'] }
-      it { @cs.last.map(&:to_s).should eql ['rgb(255,255,255)'] }
+      it { @cs.last.to_s.should eql 'rgb(255,255,255)' }
     end
 
     context "when :red" do
       before(:all) { @cs = colorset[:red] }
       it { @cs.take(3).map(&:to_s).should eql ['rgb(0,0,0)', 'rgb(0,0,128)', 'rgb(0,0,139)'] }
-      it { @cs.last.map(&:to_s).should eql ['rgb(255,255,255)'] }
+      it { @cs.last.to_s.should eql 'rgb(255,255,255)' }
     end
 
     context "when :green in descent order" do
