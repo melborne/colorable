@@ -1,6 +1,7 @@
 module Colorable
 	class RGBRangeError < StandardError; end
 	class RGB
+		include Comparable
 		attr_accessor :rgb, :r, :g, :b
 		def initialize(r=0,g=0,b=0)
 			@r, @g, @b = @rgb = validate_rgb(r, g, b)
@@ -12,6 +13,19 @@ module Colorable
 		def to_a
 			rgb
 		end
+
+		def to_s
+      "rgb(%i,%i,%i)" % rgb
+		end
+
+		def <=>(other)
+			self.to_a <=> other.to_a
+		end
+
+	  def move_to_top(idx)
+	    arr = self.to_a
+	    arr.insert 0, arr.delete_at(idx)
+	  end
 
 		# Pass Array of [r, g, b] or a Fixnum.
 		# Returns new RGB object with added RGB.

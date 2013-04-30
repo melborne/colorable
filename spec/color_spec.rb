@@ -30,10 +30,10 @@ describe Colorable::Color do
 
     context "with an array" do
       context "of valid RGB value" do
-        it { color.new([240, 248, 255]).rgb.should eql [240, 248, 255] }
-        it { color.new([240, 230, 140]).rgb.should eql [240, 230, 140] }
-        it { color.new([245, 255, 250]).rgb.should eql [245, 255, 250] }
-        it { color.new([216, 191, 216]).rgb.should eql [216, 191, 216] }
+        it { color.new([240, 248, 255]).rgb.to_a.should eql [240, 248, 255] }
+        it { color.new([240, 230, 140]).rgb.to_a.should eql [240, 230, 140] }
+        it { color.new([245, 255, 250]).rgb.to_a.should eql [245, 255, 250] }
+        it { color.new([216, 191, 216]).rgb.to_a.should eql [216, 191, 216] }
       end
 
       context "of invalid RGB value" do
@@ -97,4 +97,7 @@ describe Colorable::Color do
     end
   end
 
+  describe "#to_s" do
+    it { color.new(:alice_blue).to_s.should eql "rgb(240,248,255)" }
+  end
 end

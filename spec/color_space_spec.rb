@@ -78,4 +78,8 @@ describe Colorable::RGB do
   		end
   	end
   end
+
+  describe "#to_s" do
+    it { rgb.new(0, 50, 100).to_s.should eql "rgb(0,50,100)"}
+  end
 end

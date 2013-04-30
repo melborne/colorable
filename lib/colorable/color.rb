@@ -10,25 +10,25 @@ module Colorable
       case name_or_rgb
       when String, Symbol
         @name = varidate_name(name_or_rgb)
-        @rgb = name2rgb(@name)
+        @rgb = RGB.new *name2rgb(@name)
       when Array
-        @rgb = validate_rgb(name_or_rgb)
-        @name = rgb2name(@rgb)
+        @rgb = RGB.new *validate_rgb(name_or_rgb)
+        @name = rgb2name(@rgb.to_a)
       else
         raise ArgumentError, "'#{name_or_rgb}' is wrong argument. Only colorname and RGB value are acceptable"
       end
     end
 
     def to_s
-      "rgb(%i,%i,%i)" % rgb
+      rgb.to_s
     end
 
     def hex
-      @hex ||= rgb2hex(rgb)
+      @hex ||= rgb2hex(rgb.to_a)
     end
 
     def hsb
-      @hsb ||= rgb2hsb(rgb)
+      @hsb ||= rgb2hsb(rgb.to_a)
     end
     alias :hsv :hsb
 
