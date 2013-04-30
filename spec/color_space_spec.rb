@@ -83,3 +83,51 @@ describe Colorable::RGB do
     it { rgb.new(0, 50, 100).to_s.should eql "rgb(0,50,100)"}
   end
 end
+
+describe Colorable::HSB do
+	let(:hsb) { Colorable::HSB }
+  describe ".new" do
+  	context "without arguments" do
+  		subject	{ hsb.new }
+  		its(:to_a) { should eql [0, 0, 0] }
+  		its(:hsb) { should eql [0, 0, 0] }
+  		its(:hue) { should eql 0 }
+  		its(:sat) { should eql 0 }
+  		its(:bright) { should eql 0 }
+  	end
+
+  	context "with arguments" do
+  		subject { hsb.new 300, 70, 90 }
+  		its(:to_a) { should eql [300, 70, 90] }
+  		its(:hsb) { should eql [300, 70, 90] }
+  		its(:hue) { should eql 300 }
+  		its(:sat) { should eql 70 }
+  		its(:bright) { should eql 90 }
+  	end
+
+  	context "pass out of HSB range" do
+  		it "raise HSBRangeError" do
+  			expect { hsb.new(0, 0, 120) }.to raise_error Colorable::HSBRangeError
+  			expect { hsb.new(360, 0, 80) }.to raise_error Colorable::HSBRangeError
+  			expect { hsb.new(0, -10, 0) }.to raise_error Colorable::HSBRangeError
+  		end
+  	end
+  end
+
+  describe "#+" do
+  	context "pass an array of numbers" do
+  		before(:all) { @hsb = hsb.new(300, 70, 90) }
+  	  subject { @hsb + [0, 5, 10] }
+  	  its(:hsb) { should eql [300, 75, 100] }
+  	  it "keep original same" do @hsb.hsb.should eql [300, 70, 90] end
+  	end
+
+  	context "when '+' makes out of HSB range or rack of numbers" do
+  		it "raise HSBRangeError" do
+	  		expect { hsb.new(300, 70, 90) + [0, 50, 0] }.to raise_error Colorable::HSBRangeError
+	  		expect { hsb.new(300, 70, 90) + [0, 0, -100] }.to raise_error Colorable::HSBRangeError
+	  		expect { hsb.new(300, 70, 90) + [0, 5] }.to raise_error ArgumentError
+  		end
+  	end
+  end
+end

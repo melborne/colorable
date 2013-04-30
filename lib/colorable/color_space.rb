@@ -56,4 +56,47 @@ module Colorable
 			end
 		end
 	end
+
+	class HSBRangeError < StandardError; end
+	class HSB
+		include Comparable
+		attr_accessor :hsb, :h, :s, :b
+		def initialize(h=0,s=0,b=0)
+			@h, @s, @b = @hsb = validate_hsb(h, s, b)
+		end
+		alias :hue :h
+		alias :sat :s
+		alias :bright :b
+
+		def to_a
+			hsb
+		end
+
+		def to_s
+      "hsb(%i,%i,%i)" % hsb
+		end
+
+		# Pass Array of [h, s, b] or a Fixnum.
+		# Returns new HSB object with added HSB.
+		def +(arg)
+			arg =
+				case arg
+				when Array
+					raise ArgumentError, "Must be three numbers contained" unless arg.size==3
+					arg
+				else
+					raise ArgumentError, "Accept only Array of three numbers"
+				end
+			new_hsb = self.hsb.zip(arg).map { |x, y| x + y }
+			self.class.new *validate_hsb(*new_hsb)
+		end
+
+		private
+		def validate_hsb(h, s, b)
+			[h, s, b].tap do |hsb|
+				range = [0...360, 0..100, 0..100]
+				raise HSBRangeError unless hsb.zip(range).all? { |c, r| r.cover? c }
+			end
+		end
+	end
 end
