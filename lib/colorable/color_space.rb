@@ -45,6 +45,10 @@ module Colorable
 			arg = arg.is_a?(Fixnum) ? -arg : arg.map(&:-@)
 			self + arg
 		end
+
+		def coerce(arg)
+			[self, arg]
+		end
 		
 		private
 		def validate_rgb(r, g, b)

@@ -56,6 +56,10 @@ describe Colorable::RGB do
   		  expect { @rgb + 160 }.to raise_error Colorable::RGBRangeError
   		end
   	end
+
+    context "coerce make Fixnum#+ accept rgb object" do
+      it { (10 + rgb.new(100, 100, 100)).rgb.should eql [110, 110, 110] }
+    end
   end
 
   describe "#-" do
