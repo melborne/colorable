@@ -28,7 +28,7 @@ module Colorable
     end
 
     def hsb
-      @hsb ||= rgb2hsb(rgb.to_a)
+      @hsb ||= HSB.new *rgb2hsb(rgb.to_a)
     end
     alias :hsv :hsb
 

@@ -52,10 +52,10 @@ describe Colorable::Color do
   end
 
   describe "#hsb" do
-    it { color.new("Alice Blue").hsb.should eql [208, 6, 100] }
-    it { color.new("Khaki").hsb.should eql [55, 42, 94] }
-    it { color.new("Mint Cream").hsb.should eql [150, 4, 100] }
-    it { color.new("Thistle").hsb.should eql [300, 12, 85] }
+    it { color.new("Alice Blue").hsb.to_a.should eql [208, 6, 100] }
+    it { color.new("Khaki").hsb.to_a.should eql [55, 42, 94] }
+    it { color.new("Mint Cream").hsb.to_a.should eql [150, 4, 100] }
+    it { color.new("Thistle").hsb.to_a.should eql [300, 12, 85] }
   end
 
   describe "#next" do

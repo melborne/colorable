@@ -27,6 +27,12 @@ describe Colorable::Colorset do
       it { @cs.take(3).map(&:to_s).should eql ['rgb(255,255,255)', 'rgb(255,255,240)', 'rgb(255,255,224)'] }
       it { @cs.last(3).map(&:to_s).should eql ['rgb(0,0,139)', 'rgb(0,0,128)', 'rgb(0,0,0)'] }
     end
+
+    context "when :hsb passed" do
+      before(:all) { @cs = colorset[:hsb] }
+      it { @cs.take(3).map{|c| c.hsb.to_s }.should eql ['hsb(0,0,0)', 'hsb(0,0,41)', 'hsb(0,0,50)'] }
+      it { @cs.last.hsb.to_s.should eql 'hsb(352,29,100)' }
+    end
   end
 
   describe "#at" do
