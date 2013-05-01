@@ -9,10 +9,7 @@ module Colorable
 		alias :red :r
 		alias :green :g
 		alias :blue :b
-		
-		def to_a
-			rgb
-		end
+		alias :to_a :rgb
 
 		def to_s
       "rgb(%i,%i,%i)" % rgb
@@ -91,6 +88,11 @@ module Colorable
 			self.class.new *validate_hsb(*new_hsb)
 		end
 
+		def -(arg)
+			arg = arg.is_a?(Fixnum) ? -arg : arg.map(&:-@)
+			self + arg
+		end
+		
 		private
 		def validate_hsb(h, s, b)
 			[h, s, b].tap do |hsb|

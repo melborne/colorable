@@ -42,6 +42,9 @@ describe Colorable::RGB do
   		it "raise RGBRangeError" do
 	  		expect { rgb.new(100, 100, 100) + [0, 50, 200] }.to raise_error Colorable::RGBRangeError
 	  		expect { rgb.new(100, 100, 100) + [0, -150, 0] }.to raise_error Colorable::RGBRangeError
+      end
+
+      it "raise ArgumentError" do
 	  		expect { rgb.new(100, 100, 100) + [0, 150] }.to raise_error ArgumentError
   		end
   	end
@@ -109,8 +112,11 @@ describe Colorable::HSB do
   		it "raise HSBRangeError" do
   			expect { hsb.new(0, 0, 120) }.to raise_error Colorable::HSBRangeError
   			expect { hsb.new(360, 0, 80) }.to raise_error Colorable::HSBRangeError
-  			expect { hsb.new(0, -10, 0) }.to raise_error Colorable::HSBRangeError
   		end
+
+      it "raise ArgumentError" do
+        expect { hsb.new(0, -10, 0) }.to raise_error Colorable::HSBRangeError
+      end
   	end
   end
 
@@ -126,8 +132,32 @@ describe Colorable::HSB do
   		it "raise HSBRangeError" do
 	  		expect { hsb.new(300, 70, 90) + [0, 50, 0] }.to raise_error Colorable::HSBRangeError
 	  		expect { hsb.new(300, 70, 90) + [0, 0, -100] }.to raise_error Colorable::HSBRangeError
+      end
+
+      it "raise ArgumentError" do
 	  		expect { hsb.new(300, 70, 90) + [0, 5] }.to raise_error ArgumentError
+        expect { hsb.new(300, 70, 90) + 5 }.to raise_error ArgumentError
   		end
   	end
+  end
+
+  describe "#-" do
+    context "pass an array of numbers" do
+      before(:all) { @hsb = hsb.new(300, 70, 90) }
+      subject { @hsb - [0, 5, 10] }
+      its(:hsb) { should eql [300, 65, 80] }
+      it "keep original same" do @hsb.hsb.should eql [300, 70, 90] end
+    end
+
+    context "when '-' makes out of HSB range" do
+      it "raise HSBRangeError" do
+        expect { hsb.new(300, 7, 90) - [305, 0, 10] }.to raise_error Colorable::HSBRangeError
+        expect { hsb.new(300, 70, 90) - [0, -35, 0] }.to raise_error Colorable::HSBRangeError
+      end
+    end
+  end
+
+  describe "#to_s" do
+    it { hsb.new(0, 50, 100).to_s.should eql "hsb(0,50,100)"}
   end
 end
