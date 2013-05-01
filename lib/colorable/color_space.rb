@@ -73,6 +73,15 @@ module Colorable
       "hsb(%i,%i,%i)" % hsb
 		end
 
+		def <=>(other)
+			self.to_a <=> other.to_a
+		end
+
+	  def move_to_top(idx)
+	    arr = self.to_a
+	    arr.insert 0, arr.delete_at(idx)
+	  end
+
 		# Pass Array of [h, s, b] or a Fixnum.
 		# Returns new HSB object with added HSB.
 		def +(arg)
