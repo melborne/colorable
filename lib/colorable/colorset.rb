@@ -23,8 +23,10 @@ module Colorable
           ->color{ color.rgb.move_to_top rgb.index(order) }
         when :hue, :sat, :bright
           ->color{ color.hsb.move_to_top hsb.index(order) }
-        else
+        when :name, :rgb, :hsb, :hsv
           ->color{ color.send order }
+        else
+          raise ArgumentError, "First argument '#{order}' is inappropriate."
         end
 
       case dir
@@ -33,7 +35,7 @@ module Colorable
       when :-
         new(colorset).sort_by(&blk).reverse
       else
-        raise ArgumentError, "it must ':+' or ':-'"
+        raise ArgumentError, "Second argument must ':+' or ':-'."
       end
     end
 
