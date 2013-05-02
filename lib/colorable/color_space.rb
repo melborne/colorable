@@ -68,6 +68,7 @@ module Colorable
 		alias :hue :h
 		alias :sat :s
 		alias :bright :b
+		alias :to_a :hsb
 
 		def to_a
 			hsb
