@@ -83,6 +83,10 @@ module Colorable
       self.class.new @mode + arg
     end
 
+    def -(arg)
+      self.class.new @mode - arg
+    end
+
     private
     def varidate_name(name)
       COLORNAMES.detect do |label, _|

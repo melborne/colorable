@@ -172,4 +172,26 @@ describe Colorable::Color do
       it { @c.to_s.should eql "hsb(250,10,80)" }
     end
   end
+
+  describe "#-" do
+    context "with rgb mode" do
+      before do
+        @c = color.new([100, 150, 200])
+        @c.mode = :rgb
+        @c2 = @c - [0, 50, 100]
+      end
+      it { @c.to_s.should eql "rgb(100,150,200)" }
+      it { @c2.to_s.should eql "rgb(100,100,100)" }
+    end
+
+    context "with hsb mode" do
+      before do
+        @c = color.new(Colorable::HSB.new(350, 20, 85))
+        @c.mode = :hsb
+        @c2 = @c - [100, 10, 5]
+      end
+      it { @c.to_s.should eql "hsb(350,20,85)" }
+      it { @c2.to_s.should eql "hsb(250,10,80)" }
+    end
+  end
 end
