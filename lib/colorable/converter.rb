@@ -51,7 +51,7 @@ module Colorable
         when 120..180 then [0, 255, norm[120..180]]
         when 180..240 then [0, 255-norm[180..240], 255]
         when 240..300 then [norm[240..300], 0, 255]
-        when 300..360 then [255, 0, 255-norm[300.360]]
+        when 300..360 then [255, 0, 255-norm[300..360]]
         end
       rgb_s = rgb_h.map { |val| val + (255-val) * (1-sat/100.0) }
       rgb_s.map { |val| (val * bright/100.0).round }
