@@ -22,10 +22,10 @@ describe Colorable::RGB do
   	end
 
   	context "pass out of RGB range" do
-  		it "raise RGBRangeError" do
-  			expect { rgb.new(0, 0, 256) }.to raise_error Colorable::RGBRangeError
-  			expect { rgb.new(-10, 0, 255) }.to raise_error Colorable::RGBRangeError
-  			expect { rgb.new(256, 256, 256) }.to raise_error Colorable::RGBRangeError
+  		it "raise RangeError" do
+  			expect { rgb.new(0, 0, 256) }.to raise_error Colorable::ColorSpace::RangeError
+  			expect { rgb.new(-10, 0, 255) }.to raise_error Colorable::ColorSpace::RangeError
+  			expect { rgb.new(256, 256, 256) }.to raise_error Colorable::ColorSpace::RangeError
   		end
   	end
   end
@@ -39,9 +39,9 @@ describe Colorable::RGB do
   	end
 
   	context "when '+' makes out of RGB range or rack of numbers" do
-  		it "raise RGBRangeError" do
-	  		expect { rgb.new(100, 100, 100) + [0, 50, 200] }.to raise_error Colorable::RGBRangeError
-	  		expect { rgb.new(100, 100, 100) + [0, -150, 0] }.to raise_error Colorable::RGBRangeError
+  		it "raise RangeError" do
+	  		expect { rgb.new(100, 100, 100) + [0, 50, 200] }.to raise_error Colorable::ColorSpace::RangeError
+	  		expect { rgb.new(100, 100, 100) + [0, -150, 0] }.to raise_error Colorable::ColorSpace::RangeError
       end
 
       it "raise ArgumentError" do
@@ -52,8 +52,8 @@ describe Colorable::RGB do
   	context "pass a Fixnum" do
   		before(:all) { @rgb = rgb.new(100, 100, 100) }
   		it { (@rgb + 50).rgb.should eql [150, 150, 150] }
-  		it "raise RGBRangeError" do
-  		  expect { @rgb + 160 }.to raise_error Colorable::RGBRangeError
+  		it "raise RangeError" do
+  		  expect { @rgb + 160 }.to raise_error Colorable::ColorSpace::RangeError
   		end
   	end
 
@@ -71,17 +71,17 @@ describe Colorable::RGB do
   	end
 
   	context "when '-' makes out of RGB range" do
-  		it "raise RGBRangeError" do
-	  		expect { rgb.new(100, 100, 100) - [0, 50, 200] }.to raise_error Colorable::RGBRangeError
-	  		expect { rgb.new(100, 100, 100) - [0, -250, 0] }.to raise_error Colorable::RGBRangeError
+  		it "raise RangeError" do
+	  		expect { rgb.new(100, 100, 100) - [0, 50, 200] }.to raise_error Colorable::ColorSpace::RangeError
+	  		expect { rgb.new(100, 100, 100) - [0, -250, 0] }.to raise_error Colorable::ColorSpace::RangeError
   		end
   	end
 
   	context "pass a Fixnum" do
   		before(:all) { @rgb = rgb.new(100, 100, 100) }
   		it { (@rgb - 50).rgb.should eql [50, 50, 50] }
-  		it "raise RGBRangeError" do
-  		  expect { @rgb - 160 }.to raise_error Colorable::RGBRangeError
+  		it "raise RangeError" do
+  		  expect { @rgb - 160 }.to raise_error Colorable::ColorSpace::RangeError
   		end
   	end
   end
@@ -113,13 +113,13 @@ describe Colorable::HSB do
   	end
 
   	context "pass out of HSB range" do
-  		it "raise HSBRangeError" do
-  			expect { hsb.new(0, 0, 120) }.to raise_error Colorable::HSBRangeError
-  			expect { hsb.new(360, 0, 80) }.to raise_error Colorable::HSBRangeError
+  		it "raise RangeError" do
+  			expect { hsb.new(0, 0, 120) }.to raise_error Colorable::ColorSpace::RangeError
+  			expect { hsb.new(360, 0, 80) }.to raise_error Colorable::ColorSpace::RangeError
   		end
 
       it "raise ArgumentError" do
-        expect { hsb.new(0, -10, 0) }.to raise_error Colorable::HSBRangeError
+        expect { hsb.new(0, -10, 0) }.to raise_error Colorable::ColorSpace::RangeError
       end
   	end
   end
@@ -133,9 +133,9 @@ describe Colorable::HSB do
   	end
 
   	context "when '+' makes out of HSB range or rack of numbers" do
-  		it "raise HSBRangeError" do
-	  		expect { hsb.new(300, 70, 90) + [0, 50, 0] }.to raise_error Colorable::HSBRangeError
-	  		expect { hsb.new(300, 70, 90) + [0, 0, -100] }.to raise_error Colorable::HSBRangeError
+  		it "raise RangeError" do
+	  		expect { hsb.new(300, 70, 90) + [0, 50, 0] }.to raise_error Colorable::ColorSpace::RangeError
+	  		expect { hsb.new(300, 70, 90) + [0, 0, -100] }.to raise_error Colorable::ColorSpace::RangeError
       end
 
       it "raise ArgumentError" do
@@ -154,9 +154,9 @@ describe Colorable::HSB do
     end
 
     context "when '-' makes out of HSB range" do
-      it "raise HSBRangeError" do
-        expect { hsb.new(300, 7, 90) - [305, 0, 10] }.to raise_error Colorable::HSBRangeError
-        expect { hsb.new(300, 70, 90) - [0, -35, 0] }.to raise_error Colorable::HSBRangeError
+      it "raise RangeError" do
+        expect { hsb.new(300, 7, 90) - [305, 0, 10] }.to raise_error Colorable::ColorSpace::RangeError
+        expect { hsb.new(300, 70, 90) - [0, -35, 0] }.to raise_error Colorable::ColorSpace::RangeError
       end
     end
   end
