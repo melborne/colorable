@@ -42,6 +42,11 @@ describe Colorable::Color do
         end
       end
     end
+
+    context "with a RGB or HSB object" do
+      it { color.new(Colorable::RGB.new 240, 248, 255).name.should eql "Alice Blue"}
+      it { color.new(Colorable::HSB.new 208, 6, 100).name.should eql "Alice Blue"}
+    end
   end
 
   describe "#hex" do
@@ -56,6 +61,16 @@ describe Colorable::Color do
     it { color.new("Khaki").hsb.to_a.should eql [55, 42, 94] }
     it { color.new("Mint Cream").hsb.to_a.should eql [150, 4, 100] }
     it { color.new("Thistle").hsb.to_a.should eql [300, 12, 85] }
+  end
+
+  describe '#red, #green, #blue, #hue, #sat, #bright' do
+    subject { color.new :alice_blue }
+    its(:red) { should eql 240 }
+    its(:green) { should eql 248 }
+    its(:blue) { should eql 255 }
+    its(:hue) { should eql 208 }
+    its(:sat) { should eql 6 }
+    its(:bright) { should eql 100 }
   end
 
   describe "#next" do
@@ -97,7 +112,64 @@ describe Colorable::Color do
     end
   end
 
+  describe "#mode=" do
+    context "default" do
+      subject { color.new :black }
+      its(:mode) { should eql :RGB }
+      it { subject.instance_variable_get(:@mode).to_s.should eql "rgb(0,0,0)"}
+    end
+
+    context "set to :HSB" do
+      before do
+        @c = color.new(:black)
+        @c.mode = :HSB
+      end
+      it { @c.mode.should eql :HSB }
+      it { @c.instance_variable_get(:@mode).to_s.should eql "hsb(0,0,0)"}
+    end
+  end
+
   describe "#to_s" do
     it { color.new(:alice_blue).to_s.should eql "rgb(240,248,255)" }
+
+    context "with rgb mode" do
+      before do
+        @c = color.new(:alice_blue)
+        @c.mode = :rgb
+      end
+      it { @c.mode.should eql :RGB }
+      it { @c.to_s.should eql "rgb(240,248,255)" }
+    end
+
+    context "with hsb mode" do
+      before do
+        @c = color.new(:alice_blue)
+        @c.mode = :hsb
+      end
+      it { @c.mode.should eql :HSB }
+      it { @c.to_s.should eql "hsb(208,6,100)" }
+    end
+  end
+
+  describe "#+" do
+    context "with rgb mode" do
+      before do
+        @c = color.new([100, 100, 100])
+        @c.mode = :rgb
+        @c2 = @c + [0, 50, 100]
+      end
+      it { @c2.to_s.should eql "rgb(100,150,200)" }
+      it { @c.to_s.should eql "rgb(100,100,100)" }
+    end
+
+    context "with hsb mode" do
+      before do
+        @c = color.new(Colorable::HSB.new(250, 10, 80))
+        @c.mode = :hsb
+        @c2 = @c + [100, 10, 5]
+      end
+      it { @c2.to_s.should eql "hsb(350,20,85)" }
+      it { @c.to_s.should eql "hsb(250,10,80)" }
+    end
   end
 end

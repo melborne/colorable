@@ -6,7 +6,7 @@ module Colorable
     attr_reader :name, :rgb
 
     def initialize(name_or_rgb)
-      @name, @rgb, @hex, @hsb, @esc = nil
+      @name, @rgb, @hex, @hsb = nil
       case name_or_rgb
       when String, Symbol
         @name = varidate_name(name_or_rgb)
@@ -14,13 +14,33 @@ module Colorable
       when Array
         @rgb = RGB.new *validate_rgb(name_or_rgb)
         @name = rgb2name(@rgb.to_a)
+      when RGB
+        @rgb = name_or_rgb
+        @name = rgb2name(@rgb.to_a)
+      when HSB
+        @hsb = name_or_rgb
+        @rgb = RGB.new *hsb2rgb(@hsb.to_a)
+        @name = rgb2name(@rgb.to_a)
+        @mode = @hsb
       else
-        raise ArgumentError, "'#{name_or_rgb}' is wrong argument. Only colorname and RGB value are acceptable"
+        raise ArgumentError, "'#{name_or_rgb}' is wrong argument. Colorname, Array of RGB values, RGB object or HSB object are acceptable"
       end
+      @mode ||= @rgb
+    end
+
+    def mode
+      "#{@mode.class}"[/\w+$/].intern
+    end
+
+    def mode=(mode)
+      @mode =
+        [rgb, hsb].detect { |c| c.class.to_s.match /#{mode}/i }
+                  .tap { |cs| raise ArgumentError, "Only accept :RGB or :HSB" unless cs }
+      mode
     end
 
     def to_s
-      rgb.to_s
+      @mode.to_s
     end
 
     def hex
@@ -32,12 +52,12 @@ module Colorable
     end
     alias :hsv :hsb
 
-    %w(red green blue).each_with_index do |c, i|
-      define_method(c) { rgb[i] }
+    %w(red green blue).each do |c|
+      define_method(c) { rgb.send c }
     end
 
-    %w(hue sat bright).each_with_index do |n, i|
-      define_method(n) { hsb[i] }
+    %w(hue sat bright).each do |c|
+      define_method(c) { hsb.send c }
     end
 
     def <=>(other)
@@ -57,6 +77,10 @@ module Colorable
 
     def dark?
       DARK_COLORS.detect { |d| d == self.name }
+    end
+
+    def +(arg)
+      self.class.new @mode + arg
     end
 
     private
