@@ -1,89 +1,88 @@
 require_relative 'spec_helper'
 
-describe Colorable::Colorset do
-  let(:colorset) { Colorable::Colorset }
-  let(:color) { Colorable::Color }
+include Colorable
+describe Colorset do
   describe ".new" do
-    it "returns a colorset object" do
-      colorset.new.should be_a_instance_of colorset
-    end
-  end
-
-  describe ".[](order)" do
-    context "when :rgb passed" do
-      before(:all) { @cs = colorset[:rgb] }
-      it { @cs.take(3).map(&:to_s).should eql ['rgb(0,0,0)', 'rgb(0,0,128)', 'rgb(0,0,139)'] }
-      it { @cs.last.to_s.should eql 'rgb(255,255,255)' }
+    context "default(NAME order)" do
+      subject { Colorset.new }
+      it { should be_a_instance_of Colorset }
+      it { subject.take(3).map(&:to_s).should eql ["Alice Blue", "Antique White", "Aqua"] }
     end
 
-    context "when :red" do
-      before(:all) { @cs = colorset[:red] }
-      it { @cs.take(3).map(&:to_s).should eql ['rgb(0,0,0)', 'rgb(0,0,128)', 'rgb(0,0,139)'] }
-      it { @cs.last.to_s.should eql 'rgb(255,255,255)' }
+    context "with RGB order" do
+      subject { Colorset.new order:'RGB' }
+      it { subject.take(3).map(&:to_s).should eql ['rgb(0,0,0)', 'rgb(0,0,128)', 'rgb(0,0,139)'] }
+      it { subject.last.to_s.should eql 'rgb(255,255,255)' }
     end
 
-    context "when :green in descent order" do
-      before(:all) { @cs = colorset[:green, :-] }
-      it { @cs.take(3).map(&:to_s).should eql ['rgb(255,255,255)', 'rgb(255,255,240)', 'rgb(255,255,224)'] }
-      it { @cs.last(3).map(&:to_s).should eql ['rgb(0,0,139)', 'rgb(0,0,128)', 'rgb(0,0,0)'] }
+    context "with red order" do
+      subject { Colorset.new order: :red }
+      it { subject.take(3).map(&:to_s).should eql ['rgb(0,0,0)', 'rgb(0,0,128)', 'rgb(0,0,139)'] }
+      it { subject.last.to_s.should eql 'rgb(255,255,255)' }
     end
 
-    context "when :hsb passed" do
-      before(:all) { @cs = colorset[:hsb] }
-      it { @cs.take(3).map{|c| c.hsb.to_s }.should eql ['hsb(0,0,0)', 'hsb(0,0,41)', 'hsb(0,0,50)'] }
-      it { @cs.last.hsb.to_s.should eql 'hsb(352,29,100)' }
+    context "with green order, reverse direction" do
+      subject { Colorset.new order:'green', dir:'-' }
+      it { subject.take(3).map(&:to_s).should eql ['rgb(255,255,255)', 'rgb(255,255,240)', 'rgb(255,255,224)'] }
+      it { subject.last(3).map(&:to_s).should eql ['rgb(0,0,139)', 'rgb(0,0,128)', 'rgb(0,0,0)'] }
+    end
+
+    context "with HSB order" do
+      subject { Colorset.new order: :hsb }
+      it { subject.take(3).map(&:to_s).should eql ['hsb(0,0,0)', 'hsb(0,0,41)', 'hsb(0,0,50)'] }
+      it { subject.last.to_s.should eql 'hsb(352,29,100)' }
     end
   end
 
   describe "#at" do
-    context "when colorset is ordered RGB" do
-      before(:all) { @cs = colorset.new }
-      it { @cs.at.to_s.should eql 'rgb(240,248,255)' }
-      it { @cs.at(1).to_s.should eql 'rgb(250,235,215)' }
+    context "with NAME order" do
+      subject { Colorset.new }
+      it { subject.at.to_s.should eql 'Alice Blue' }
+      it { subject.at(1).to_s.should eql 'Antique White' }
     end
 
-    context "when colorset is ordered RGB" do
-      before(:all) { @cs = colorset[:green] }
-      it { @cs.at.to_s.should eql 'rgb(0,0,0)' }
-      it { @cs.at(1).to_s.should eql 'rgb(0,0,128)' }
+    context "with RGB order" do
+      subject { Colorset.new order: :green }
+      it { subject.at.to_s.should eql 'rgb(0,0,0)' }
+      it { subject.at(1).to_s.should eql 'rgb(0,0,128)' }
     end
 
     context "when argument exceed colorset size" do
-      it "acts like linked list" do
-        colorset.new.at(144).name.should eql "Alice Blue"
+      it "acts like circularly linked list" do
+        Colorset.new.at(144).name.to_s.should eql "Alice Blue"
       end
     end
   end
 
   describe "#next" do
-    before(:all) { @cs = colorset.new }
-    it { @cs.next.name.should eql 'Antique White' }
-    it { @cs.next.name.should eql 'Aqua' }
-    it { @cs.next(2).name.should eql 'Azure' }
+    before(:all) { @cs = Colorset.new }
+    it { @cs.next.name.to_s.should eql 'Antique White' }
+    it { @cs.next.name.to_s.should eql 'Aqua' }
+    it { @cs.next(2).name.to_s.should eql 'Azure' }
   end
 
   describe "#prev" do
-    before(:all) { @cs = colorset[:hsb] }
-    it { @cs.prev.name.should eql 'Light Pink' }
-    it { @cs.prev.name.should eql 'Pink' }
-    it { @cs.prev.name.should eql 'Crimson' }
-    it { @cs.prev(2).name.should eql 'Lavender Blush' }
+    before(:all) { @cs = Colorset.new(order: :hsb) }
+    it { @cs.prev.name.to_s.should eql 'Light Pink' }
+    it { @cs.prev.name.to_s.should eql 'Pink' }
+    it { @cs.prev.name.to_s.should eql 'Crimson' }
+    it { @cs.prev(2).name.to_s.should eql 'Lavender Blush' }
   end
 
   describe "#rewind" do
-    before(:all) { @cs = colorset.new }
-    it { @cs.next(10); @cs.rewind.name.should eql 'Alice Blue' }
+    before(:all) { @cs = Colorset.new }
+    it { @cs.next(10); @cs.rewind.name.to_s.should eql 'Alice Blue' }
   end
 
   describe "#size" do
     it "returns size of colorset" do
-      colorset.new.size.should eql 144
+      Colorset.new.size.should eql 144
     end
   end
 
   describe "#to_s" do
-    before(:all) { @cs = colorset.new }
-    it { @cs.to_s.should eql "#<Colorset 0/144 pos='Alice Blue:rgb(240,248,255)'>"}
-    it { @cs.next;@cs.to_s.should eql "#<Colorset 1/144 pos='Antique White:rgb(250,235,215)'>"}
+    before(:all) { @cs = Colorset.new }
+    it { @cs.to_s.should eql "#<Colorset 0/144 pos='Alice Blue/rgb(240,248,255)/hsb(208,6,100)'>"}
+    it { @cs.next;@cs.to_s.should eql "#<Colorset 1/144 pos='Antique White/rgb(250,235,215)/hsb(35,14,98)'>"}
   end
 end
