@@ -1,6 +1,6 @@
 module Colorable
   class Color
-    class ColorNameError < StandardError; end
+    class NameError < StandardError; end
     include Colorable::Converter
     include Comparable
     attr_reader :name, :rgb
@@ -10,22 +10,24 @@ module Colorable
       case name_or_rgb
       when String, Symbol
         @name = varidate_name(name_or_rgb)
-        @rgb = RGB.new *name2rgb(@name)
+        @rgb = RGB.new *name2rgb(@name.to_s)
+        @mode = @name
       when Array
         @rgb = RGB.new *validate_rgb(name_or_rgb)
-        @name = rgb2name(@rgb.to_a)
+        @name = NAME.new rgb2name(@rgb.to_a)
+        @mode = @rgb
       when RGB
         @rgb = name_or_rgb
-        @name = rgb2name(@rgb.to_a)
+        @name = NAME.new rgb2name(@rgb.to_a)
+        @mode = @rgb
       when HSB
         @hsb = name_or_rgb
         @rgb = RGB.new *hsb2rgb(@hsb.to_a)
-        @name = rgb2name(@rgb.to_a)
+        @name = NAME.new rgb2name(@rgb.to_a)
         @mode = @hsb
       else
         raise ArgumentError, "'#{name_or_rgb}' is wrong argument. Colorname, Array of RGB values, RGB object or HSB object are acceptable"
       end
-      @mode ||= @rgb
     end
 
     def mode
@@ -34,7 +36,7 @@ module Colorable
 
     def mode=(mode)
       @mode =
-        [rgb, hsb].detect { |c| c.class.to_s.match /#{mode}/i }
+        [rgb, hsb, name].detect { |c| c.class.to_s.match /#{mode}/i }
                   .tap { |cs| raise ArgumentError, "Only accept :RGB or :HSB" unless cs }
       mode
     end
@@ -89,11 +91,8 @@ module Colorable
 
     private
     def varidate_name(name)
-      COLORNAMES.detect do |label, _|
-        [label, name].same? { |str| "#{str}".gsub(/[_\s]/,'').downcase }
-      end.tap do |res, _|
-        raise ColorNameError, "'#{name}' is not a valid colorname" unless res
-        break res
+      NAME.new(name).tap do |res|
+        raise NameError, "'#{name}' is not a valid colorname" unless res.name
       end
     end
   end
