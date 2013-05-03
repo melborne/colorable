@@ -105,4 +105,34 @@ module Colorable
 			end
 		end
 	end
+
+	class NAME
+		attr_accessor :name
+		attr_reader :sym
+		def initialize(name)
+			@name = find_name(name)
+			@sym = nil
+		end
+
+		alias :to_s :name
+
+		def sym
+			@name.gsub(/\s/, '_').downcase.intern if @name
+		end
+
+		def dark?
+      DARK_COLORS.detect { |d| d == self.name }
+		end
+
+		def <=>(other)
+			self.name <=> other.name
+		end
+
+		private
+		def find_name(name)
+      COLORNAMES.detect do |label, _|
+        [label, name].same? { |str| "#{str}".gsub(/[_\s]/,'').downcase }
+      end.tap {|label, _| break label if label }
+		end	
+	end
 end

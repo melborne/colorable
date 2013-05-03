@@ -164,3 +164,26 @@ describe HSB do
     it { HSB.new(0, 50, 100).to_s.should eql "hsb(0,50,100)"}
   end
 end
+
+describe NAME do
+  describe ".new" do
+    context "with valid name" do
+      subject { NAME.new :alice_blue } 
+      its(:to_s) { should eql 'Alice Blue' }
+      its(:name) { should eql 'Alice Blue' }
+      its(:sym) { should eql :alice_blue }
+    end
+
+    context "with invalid name" do
+      subject { NAME.new :abc_color }
+      its(:to_s) { should be_nil }
+      its(:name) { should be_nil }
+      its(:sym) { should be_nil }
+    end
+  end
+
+  describe "dark?" do
+    it { NAME.new(:navy).dark?.should be_true }
+    it { NAME.new(:alice_blue).dark?.should be_false }
+  end
+end
