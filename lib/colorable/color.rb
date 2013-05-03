@@ -63,18 +63,18 @@ module Colorable
     end
 
     def <=>(other)
-      self.name <=> other.name
+      self.rgb <=> other.rgb
     end
 
     @@colorset = {}
-    def next(set=:name, n=1)
-      @@colorset[set] ||= Colorable::Colorset[set]
-      idx = @@colorset[set].find_index(self)
-      @@colorset[set].at(idx+n) if idx
+    def next(n=1)
+      @@colorset[mode] ||= Colorable::Colorset.new(order: mode)
+      idx = @@colorset[mode].find_index(self)
+      @@colorset[mode].at(idx+n).tap{|c| c.mode = mode } if idx
     end
 
-    def prev(set=:name, n=1)
-      self.next(set, -n)
+    def prev(n=1)
+      self.next(-n)
     end
 
     def dark?

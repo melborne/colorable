@@ -74,41 +74,56 @@ describe Color do
   end
 
   describe "#next" do
-    context "when no argument" do
-      it "returns next color in name order" do
-        @c = Color.new("khaki")
-        @c.next.name.to_s.should eql "Lavender"
-      end
+    context "with :NAME mode" do
+      subject { Color.new :khaki }
+      it { subject.next.to_s.should eql 'Lavender' }
+      it { subject.next(2).to_s.should eql 'Lavender Blush' }
     end
 
-    context "when :hsb passed" do
-      it "returns next color in hsb order" do
-        @c = Color.new("khaki")
-        @c.next(:hsb).name.to_s.should eql "Dark Khaki"
+    context "with :RGB mode" do
+      subject { Color.new [240, 230, 140] }
+      it { subject.next.to_s.should eql "rgb(240,248,255)" }
+      it { subject.next(2).to_s.should eql "rgb(240,255,240)" }
+    end
+
+    context "with :HSB mode" do
+      before do
+        @c = Color.new :khaki
+        @c.mode = :HSB
       end
+      it { @c.next.to_s.should eql "hsb(56,43,74)" } #Dark Khaki
+      it { @c.next(2).to_s.should eql "hsb(60,6,100)" } #Ivory
     end
 
     context "when color is not in X11 colorset" do
-      it "returns nil" do
-        @c = Color.new([100,10,10])
-        @c.next.should be_nil
-      end
+      it { Color.new([100,10,10]).name.to_s.should be_nil }
     end
   end
 
   describe "#prev" do
-    context "when no argument" do
-      it "returns prev color in name order" do
-        @c = Color.new("Alice Blue")
-        @c.prev.name.to_s.should eql "Yellow Green"
-      end
+    context "with :NAME mode" do
+      subject { Color.new :khaki }
+      it { subject.prev.to_s.should eql 'Ivory' }
+      it { subject.prev(2).to_s.should eql 'Indigo' }
     end
 
-    context "when :hsb passed" do
-      it "returns prev color in hsb order" do
-        @c = Color.new("Yellow")
-        @c.prev(:hsb).name.to_s.should eql "Olive"
+    context "with :RGB mode" do
+      subject { Color.new [240, 230, 140] }
+      it { subject.prev.to_s.should eql "rgb(240,128,128)" } #Light Coral
+      it { subject.prev(2).to_s.should eql "rgb(238,232,170)" } #Pale Goldenrod
+    end
+
+    context "with :HSB mode" do
+      before do
+        @c = Color.new :khaki
+        @c.mode = :HSB 
       end
+      it { @c.prev.to_s.should eql "hsb(55,29,93)" } #Pale Goldenrod
+      it { @c.prev(2).to_s.should eql "hsb(55,20,100)" } #Lemon Chiffon
+    end
+
+    context "when color is not in X11 colorset" do
+      it { Color.new([100,10,10]).name.to_s.should be_nil }
     end
   end
 
