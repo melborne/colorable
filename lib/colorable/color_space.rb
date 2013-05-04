@@ -128,11 +128,26 @@ module Colorable
 			self.name <=> other.name
 		end
 
+		def +(n)
+			raise ArgumentError, 'Only accept a Fixnum' unless n.is_a?(Fixnum)
+			pos = COLORNAMES.find_index{|n,_| n==self.name} + n
+			self.class.new COLORNAMES.at(pos % COLORNAMES.size)[0]
+		end
+
+		def -(n)
+			raise ArgumentError, 'Only accept a Fixnum' unless n.is_a?(Fixnum)
+			self + -n
+		end
+
+		def coerce(arg)
+			[self, arg]
+		end
+
 		private
 		def find_name(name)
       COLORNAMES.detect do |label, _|
         [label, name].same? { |str| "#{str}".gsub(/[_\s]/,'').downcase }
-      end.tap {|label, _| break label if label }
+      end.tap {|lbl, _| break lbl if lbl }
 		end	
 	end
 end

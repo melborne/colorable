@@ -186,4 +186,40 @@ describe NAME do
     it { NAME.new(:navy).dark?.should be_true }
     it { NAME.new(:alice_blue).dark?.should be_false }
   end
+
+  describe "#+" do
+    context "pass an irregal argument" do
+      it "raise ArgumentError" do
+        expect { NAME.new(:alice_blue) + [0, 150, 100] }.to raise_error ArgumentError
+      end
+    end
+
+    context "pass a Fixnum" do
+      before(:all) { @name = NAME.new(:alice_blue) }
+      it { (@name + 1).name.should eql 'Antique White' }
+      it { (@name + 2).name.should eql 'Aqua' }
+    end
+
+    context "coerce make Fixnum#+ accept name object" do
+      it { (1 + NAME.new(:alice_blue)).to_s.should eql 'Antique White' }
+    end
+  end
+
+  describe "#-" do
+    context "pass an irregal argument" do
+      it "raise ArgumentError" do
+        expect { NAME.new(:alice_blue) - [0, 150, 100] }.to raise_error ArgumentError
+      end
+    end
+
+    context "pass a Fixnum" do
+      before(:all) { @name = NAME.new(:alice_blue) }
+      it { (@name - 1).name.should eql 'Yellow Green' }
+      it { (@name - 2).name.should eql 'Yellow' }
+    end
+
+    context "coerce make Fixnum#+ accept name object" do
+      it { (1 - NAME.new(:alice_blue)).to_s.should eql 'Yellow Green' }
+    end
+  end
 end
