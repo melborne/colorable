@@ -5,33 +5,10 @@ module Colorable
     include Comparable
     attr_reader :name, :rgb
 
-    def initialize(name_or_rgb)
-      @name, @rgb, @hex, @hsb = nil
-      case name_or_rgb
-      when String, Symbol
-        @name = varidate_name(name_or_rgb)
-        @rgb = RGB.new *name2rgb(@name.to_s)
-        @mode = @name
-      when Array
-        @rgb = RGB.new *validate_rgb(name_or_rgb)
-        @name = NAME.new rgb2name(@rgb.to_a)
-        @mode = @rgb
-      when RGB
-        @rgb = name_or_rgb
-        @name = NAME.new rgb2name(@rgb.to_a)
-        @mode = @rgb
-      when HSB
-        @hsb = name_or_rgb
-        @rgb = RGB.new *hsb2rgb(@hsb.to_a)
-        @name = NAME.new rgb2name(@rgb.to_a)
-        @mode = @hsb
-      when NAME
-        @name = name_or_rgb
-        @rgb = RGB.new *name2rgb(@name.to_s)
-        @mode = @name
-      else
-        raise ArgumentError, "'#{name_or_rgb}' is wrong argument. Colorname, Array of RGB values, RGB object or HSB object or NAME object are acceptable"
-      end
+    # +arg+ can be Colorname, Array of RGB values, also RGB, HSB or NAME object.
+    # Each Color object has output mode, which is :NAME, :RGB or :HSB.
+    def initialize(arg)
+      @name, @rgb, @hsb, @hex, @mode = set_variables(arg)
     end
 
     def mode
@@ -115,6 +92,40 @@ module Colorable
     end
 
     private
+    def set_variables(arg)
+      case arg
+      when String, Symbol
+        name = varidate_name(arg)
+        rgb = RGB.new *name2rgb(name.to_s)
+        hsb = nil
+        mode = name
+      when Array
+        rgb = RGB.new *validate_rgb(arg)
+        name = NAME.new rgb2name(rgb.to_a)
+        hsb = nil
+        mode = rgb
+      when RGB
+        rgb = arg
+        name = NAME.new rgb2name(rgb.to_a)
+        hsb = nil
+        mode = rgb
+      when HSB
+        hsb = arg
+        rgb = RGB.new *hsb2rgb(hsb.to_a)
+        name = NAME.new rgb2name(rgb.to_a)
+        mode = hsb
+      when NAME
+        name = arg
+        rgb = RGB.new *name2rgb(name.to_s)
+        hsb = nil
+        mode = name
+      else
+        raise ArgumentError, "'#{arg}' is wrong argument. Colorname, Array of RGB values, also RGB, HSB or NAME object are acceptable"
+      end
+      hex = nil
+      return name, rgb, hsb, hex, mode
+    end
+
     def varidate_name(name)
       NAME.new(name).tap do |res|
         raise NameError, "'#{name}' is not a valid colorname" unless res.name
