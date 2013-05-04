@@ -17,3 +17,10 @@ class Array
     self.uniq(&blk).size==1
   end
 end
+
+class Pattern < Array
+  def ===(other)
+    zip(other).all? { |a, b| a === b }
+  end      
+end
+

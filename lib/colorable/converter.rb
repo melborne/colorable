@@ -9,13 +9,12 @@ module Colorable
     end
 
     def rgb2name(rgb)
-      validate_rgb(rgb)
-      COLORNAMES.rassoc(rgb).tap { |c, _| break c if c }
+      COLORNAMES.rassoc(validate_rgb rgb)
+                .tap { |c, _| break c if c }
     end
 
     def rgb2hsb(rgb)
-      validate_rgb(rgb)
-      r, g, b = rgb.map(&:to_f)
+      r, g, b = validate_rgb(rgb).map(&:to_f)
       hue = Math.atan2(Math.sqrt(3)*(g-b), 2*r-g-b).to_degree
 
       min, max = [r, g, b].minmax
@@ -28,9 +27,8 @@ module Colorable
 
     class NotImplemented < StandardError; end
     def rgb2hsl(rgb)
-      validate_rgb(rgb)
       raise NotImplemented, 'Not Implemented Yet'
-      r, g, b = rgb.map(&:to_f)
+      r, g, b = validate_rgb(rgb).map(&:to_f)
       hue = Math.atan2(Math.sqrt(3)*(g-b), 2*r-g-b).to_degree
 
       min, max = [r, g, b].minmax
@@ -41,8 +39,7 @@ module Colorable
     end
 
     def hsb2rgb(hsb)
-      validate_hsb(hsb)
-      hue, sat, bright = hsb
+      hue, sat, bright = validate_hsb(hsb)
       norm = ->range{ hue.norm(range, 0..255) }
       rgb_h =
         case hue
@@ -59,43 +56,36 @@ module Colorable
     alias :hsv2rgb :hsb2rgb
 
     def rgb2hex(rgb)
-      validate_rgb(rgb)
-      hex = rgb.map do |val|
+      hex = validate_rgb(rgb).map do |val|
         val.to_s(16).tap { |h| break "0#{h}" if h.size==1 }
       end
       '#' + hex.join.upcase
     end
 
     def hex2rgb(hex)
-      validate_hex(hex)
-      _, *hex = hex.unpack('A1A2A2A2')
+      _, *hex = validate_hex(hex).unpack('A1A2A2A2')
       hex.map { |val| val.to_i(16) }
     end
   
     private
-    def validate_rgb(rgb)
-      if rgb.all? { |val| val.between?(0, 255) }
-        rgb
+    def validate(type, pattern, data)
+      case Array(data)
+      when Pattern[*Array(pattern)] then data
       else
-        raise ArgumentError, "'#{rgb}' is invalid for a RGB value"
+        raise ArgumentError, "'#{data}' is invalid for a #{type} value"
       end
     end
 
+    def validate_rgb(rgb)
+      validate(:RGB, [0..255, 0..255, 0..255], rgb)
+    end
+
     def validate_hsb(hsb)
-      h, *sb = hsb
-      if h.between?(0, 360) && sb.all? { |val| val.between?(0, 100) } 
-        hsb
-      else
-        raise ArgumentError, "'#{hsb}' is invalid for a HSB value"
-      end
+      validate(:HSB, [0..359, 0..100, 0..100], hsb)
     end
   
     def validate_hex(hex)
-      if hex.match(/^#[0-9A-F]{6}$/i)
-        hex.upcase
-      else
-        raise ArgumentError, "'#{hex}' is invalid for a HEX value"
-      end
+      validate(:HEX, /^#[0-9A-F]{6}$/i, hex)
     end
   end
 end
