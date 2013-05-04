@@ -181,6 +181,12 @@ describe Color do
   end
 
   describe "#+" do
+    context "with :NAME mode" do
+      before { @c = Color.new :khaki }
+      it { (@c + 1).to_s.should eql 'Lavender' }
+      it { (@c + 2).to_s.should eql 'Lavender Blush' }
+    end
+
     context "with rgb mode" do
       before do
         @c = Color.new([100, 100, 100])
@@ -203,6 +209,12 @@ describe Color do
   end
 
   describe "#-" do
+    context "with :NAME mode" do
+      before { @c = Color.new :khaki }
+      it { (@c - 1).to_s.should eql 'Ivory' }
+      it { (@c - 2).to_s.should eql 'Indigo' }
+    end
+
     context "with rgb mode" do
       before do
         @c = Color.new([100, 150, 200])

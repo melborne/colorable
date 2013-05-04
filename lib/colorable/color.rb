@@ -25,8 +25,12 @@ module Colorable
         @rgb = RGB.new *hsb2rgb(@hsb.to_a)
         @name = NAME.new rgb2name(@rgb.to_a)
         @mode = @hsb
+      when NAME
+        @name = name_or_rgb
+        @rgb = RGB.new *name2rgb(@name.to_s)
+        @mode = @name
       else
-        raise ArgumentError, "'#{name_or_rgb}' is wrong argument. Colorname, Array of RGB values, RGB object or HSB object are acceptable"
+        raise ArgumentError, "'#{name_or_rgb}' is wrong argument. Colorname, Array of RGB values, RGB object or HSB object or NAME object are acceptable"
       end
     end
 
