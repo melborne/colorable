@@ -78,12 +78,16 @@ module Colorable
     end
 
     @@colorset = {}
+    # Returns a next color object in X11 colors.
+    # The color sequence is determined by its color mode.
     def next(n=1)
       @@colorset[mode] ||= Colorable::Colorset.new(order: mode)
       idx = @@colorset[mode].find_index(self)
       @@colorset[mode].at(idx+n).tap{|c| c.mode = mode } if idx
     end
 
+    # Returns a previous color object in X11 colors.
+    # The color sequence is determined by its color mode.
     def prev(n=1)
       self.next(-n)
     end
@@ -92,10 +96,16 @@ module Colorable
       !!DARK_COLORS.detect { |d| d == name.to_s }
     end
 
+    # Returns a color object which has incremented color values.
+    # Array of values or a Fixnum is acceptable as an argument.
+    # Which values are affected is determined by its color mode.
     def +(arg)
       self.class.new @mode + arg
     end
 
+    # Returns a color object which has decremented color values.
+    # Array of values or a Fixnum is acceptable as an argument.
+    # Which values are affected is determined by its color mode.
     def -(arg)
       self.class.new @mode - arg
     end
