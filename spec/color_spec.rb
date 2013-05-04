@@ -223,4 +223,23 @@ describe Color do
       it { @c2.to_s.should eql "hsb(250,10,80)" }
     end
   end
+
+  describe "#dark?" do
+    it { Color.new(:black).dark?.should eql true }
+    it { Color.new(:yellow).dark?.should eql false }
+  end
+
+  describe "#info" do
+    it 'returns data of the color' do
+      info = { 
+        NAME:'Black',
+        RGB:[0, 0, 0],
+        HSB:[0, 0, 0],
+        HEX:'#000000',
+        MODE: :NAME,
+        DARK:true
+      }
+      Color.new(:black).info.should eql info
+    end
+  end
 end

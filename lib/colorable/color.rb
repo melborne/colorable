@@ -45,6 +45,17 @@ module Colorable
       @mode.to_s
     end
 
+    def info
+      {
+        NAME: name.to_s,
+        RGB: rgb.to_a,
+        HSB: hsb.to_a,
+        HEX: hex.to_s,
+        MODE: mode,
+        DARK: dark?
+      }
+    end
+
     def hex
       @hex ||= rgb2hex(rgb.to_a)
     end
@@ -78,7 +89,7 @@ module Colorable
     end
 
     def dark?
-      DARK_COLORS.detect { |d| d == self.name }
+      !!DARK_COLORS.detect { |d| d == name.to_s }
     end
 
     def +(arg)
