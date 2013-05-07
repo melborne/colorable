@@ -1,7 +1,6 @@
 module Colorable
   class Color
     class NameError < StandardError; end
-    include Colorable::Converter
     include Comparable
     attr_reader :name, :rgb
 
@@ -15,6 +14,7 @@ module Colorable
       "#{@mode.class}"[/\w+$/].intern
     end
 
+    # Set output mode.
     def mode=(mode)
       @mode =
         [rgb, hsb, name].detect { |c| c.class.to_s.match /#{mode}/i }
@@ -100,7 +100,7 @@ module Colorable
         hsb = nil
         mode = name
       when Array
-        rgb = RGB.new *validate_rgb(arg)
+        rgb = RGB.new *arg
         name = NAME.new rgb2name(rgb.to_a)
         hsb = nil
         mode = rgb
