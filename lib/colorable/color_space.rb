@@ -1,6 +1,6 @@
 module Colorable
 	class ColorSpace
-		class RangeError < StandardError; end
+    include Colorable::Converter
 		include Comparable
 
 		def <=>(other)
@@ -21,16 +21,23 @@ module Colorable
 			self + arg
 		end
 
+		def coerce(arg)
+			[self, arg]
+		end
+
 		def to_s
 			name = "#{self.class}"[/\w+$/].downcase
       "#{name}(%i,%i,%i)" % to_a
 		end
 
 		private
-		def validate_colorvalue(val, range)
-			raise RangeError, "the value must within #{range}" unless range.cover?(val)
-			val
-		end
+    def validate(pattern, data)
+      case Array(data)
+      when Pattern[*Array(pattern)] then data
+      else
+        raise ArgumentError, "'#{data}' is invalid for a #{self.class} value"
+      end
+    end
 	end
 
 	class RGB < ColorSpace
@@ -57,19 +64,25 @@ module Colorable
 					raise ArgumentError, "Accept only Array of three numbers or a Fixnum"
 				end
 			new_rgb = self.rgb.zip(arg).map { |x, y| x + y }
-			self.class.new *validate_rgb(new_rgb)
+			self.class.new *new_rgb
 		end
 
-		def coerce(arg)
-			[self, arg]
+		def to_name
+			rgb2name(self.to_a)
 		end
-		
+
+		def to_hsb
+			rgb2hsb(self.to_a)
+		end
+
+		def to_hex
+			rgb2hex(self.to_a)
+		end
+
 		private
-		def validate_rgb(rgb)
-			rgb.tap do |rgb|
-				rgb.map { |c| validate_colorvalue c, 0..255 }
-			end
-		end
+    def validate_rgb(rgb)
+      validate([0..255, 0..255, 0..255], rgb)
+    end
 	end
 
 	class HSB < ColorSpace
@@ -81,6 +94,7 @@ module Colorable
 		alias :sat :s
 		alias :bright :b
 		alias :to_a :hsb
+		undef :coerce
 
 		# Pass Array of [h, s, b] or a Fixnum.
 		# Returns new HSB object with added HSB.
@@ -94,19 +108,98 @@ module Colorable
 					raise ArgumentError, "Accept only Array of three numbers"
 				end
 			new_hsb = self.hsb.zip(arg).map { |x, y| x + y }
-			self.class.new *validate_hsb(new_hsb)
+			self.class.new *new_hsb
+		end
+
+		def to_name
+			rgb2name(self.to_rgb)
+		end
+
+		def to_rgb
+			hsb2rgb(self.to_a)
+		end
+
+		def to_hex
+			rgb2hex(self.to_rgb)
 		end
 
 		private
-		def validate_hsb(hsb)
-			hsb.tap do |hsb|
-				hsb.zip([0...360, 0..100, 0..100])
-				   .map { |c, r| validate_colorvalue c, r }
-			end
-		end
+    def validate_hsb(hsb)
+      validate([0..359, 0..100, 0..100], hsb)
+    end
 	end
 
-	class NAME
+	class HEX < ColorSpace
+		attr_reader :hex
+		def initialize(hex='#FFFFFF')
+			@hex = validate_hex(hex)
+		end
+		alias :to_s :hex
+
+		def to_a
+			@hex.unpack('A1A2A2A2').drop(1)
+		end
+
+		def +(arg)
+			build_hex_with(:+, arg)
+		end
+
+		def -(arg)
+			build_hex_with(:-, arg)
+		end
+
+		def to_rgb
+			hex2rgb(self.to_s)
+		end
+
+		def to_hsb
+			rgb2hsb(self.to_rgb)
+		end
+
+		def to_name
+			rgb2name(self.to_rgb)
+		end
+
+    private
+    def validate_hex(hex)
+    	hex = hex.join if hex.is_a?(Array)
+      validate(/^#[0-9A-F]{6}$/i, hex_norm(hex))
+    end
+
+    def hex_norm(hex)
+    	hex = hex.sub(/^#/, '').upcase
+    	 				 .sub(/^([0-9A-F])([0-9A-F])([0-9A-F])$/, '\1\1\2\2\3\3')
+    	"##{hex}"
+    end
+
+    def rgb2hex(rgb)
+      hex = rgb.map do |val|
+        val.to_s(16).tap { |h| break "0#{h}" if h.size==1 }
+      end
+      '#' + hex.join.upcase
+    end
+
+    def hex2rgb(hex)
+      _, *hex = hex.unpack('A1A2A2A2')
+      hex.map { |val| val.to_i(16) }
+    end
+
+    def build_hex_with(op, arg)
+    	_rgb =
+				case arg
+				when Fixnum
+					[arg] * 3
+				when String
+					hex2rgb(validate_hex arg)
+				else
+					raise ArgumentError, "Accept only a Hex string or a Fixnum"
+				end	
+			rgb = hex2rgb(self.hex).zip(_rgb).map { |x, y| x.send(op, y) }
+			self.class.new rgb2hex(rgb)
+    end
+	end
+
+	class NAME < ColorSpace
 		attr_accessor :name
 		attr_reader :sym
 		def initialize(name)
@@ -143,6 +236,18 @@ module Colorable
 			[self, arg]
 		end
 
+		def to_rgb
+			name2rgb(self.to_s)
+		end
+
+		def to_hsb
+			rgb2hsb(self.to_rgb)
+		end
+
+		def to_hex
+			rgb2hex(self.to_rgb)
+		end
+
 		private
 		def find_name(name)
       COLORNAMES.detect do |label, _|
@@ -150,4 +255,4 @@ module Colorable
       end.tap {|lbl, _| break lbl if lbl }
 		end	
 	end
-end
+end  
