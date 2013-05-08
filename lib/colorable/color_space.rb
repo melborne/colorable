@@ -167,7 +167,7 @@ module Colorable
     end
 
     def hex_norm(hex)
-    	hex = hex.sub(/^#/, '').upcase
+    	hex = hex.to_s.sub(/^#/, '').upcase
     	 				 .sub(/^([0-9A-F])([0-9A-F])([0-9A-F])$/, '\1\1\2\2\3\3')
     	"##{hex}"
     end
