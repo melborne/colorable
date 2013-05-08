@@ -28,6 +28,21 @@ describe Color do
       end
     end
 
+    context "with a HEX string" do
+      context "of valid HEX" do
+        it { Color.new("#FFFFFF").hex.to_s.should eql "#FFFFFF" }
+        it { Color.new("#00F").hex.to_s.should eql "#0000FF" }
+        it { Color.new("000000").hex.to_s.should eql "#000000" }
+      end
+
+      context "of invalid HEX" do
+        it "raise an error" do
+          expect { Color.new("#FFFFGG") }.to raise_error ArgumentError
+          expect { Color.new("#FFFF") }.to raise_error ArgumentError
+        end
+      end
+    end
+
     context "with an array" do
       context "of valid RGB value" do
         it { Color.new([240, 248, 255]).rgb.to_a.should eql [240, 248, 255] }

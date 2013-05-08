@@ -97,34 +97,46 @@ module Colorable
     def set_variables(arg)
       case arg
       when String, Symbol
-        name = validate_name(arg)
-        rgb = RGB.new *name.to_rgb
-        hsb = nil
-        mode = name
+        begin
+          hex = HEX.new(arg)
+          name = hex.to_name
+          rgb = hex.to_rgb
+          hsb = nil
+          mode = hex
+        rescue ArgumentError
+          name = validate_name(arg)
+          rgb = RGB.new *name.to_rgb
+          hsb = nil
+          hex = nil
+          mode = name
+        end
       when Array
         rgb = RGB.new *arg
         name = NAME.new(rgb.to_name) rescue nil
         hsb = nil
+        hex = nil
         mode = rgb
       when RGB
         rgb = arg
         name = NAME.new(rgb.to_name) rescue nil
         hsb = nil
+        hex = nil
         mode = rgb
       when HSB
         hsb = arg
         rgb = RGB.new *hsb.to_rgb
         name = NAME.new(rgb.to_name) rescue nil
+        hex = nil
         mode = hsb
       when NAME
         name = arg
         rgb = RGB.new *name.to_rgb
         hsb = nil
+        hex = nil
         mode = name
       else
         raise ArgumentError, "'#{arg}' is wrong argument. Colorname, Array of RGB values, also RGB, HSB or NAME object are acceptable"
       end
-      hex = nil
       return name, rgb, hsb, hex, mode
     end
 
