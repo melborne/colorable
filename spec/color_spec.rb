@@ -59,8 +59,9 @@ describe Color do
     end
 
     context "with a RGB or HSB object" do
-      it { Color.new(RGB.new 240, 248, 255).name.to_s.should eql "Alice Blue"}
-      it { Color.new(HSB.new 208, 6, 100).name.to_s.should eql "Alice Blue"}
+      it { Color.new(RGB.new 240, 248, 255).name.to_s.should eql "Alice Blue" }
+      it { Color.new(HSB.new 208, 6, 100).name.to_s.should eql "Alice Blue" }
+      it { Color.new(HEX.new '#F0F8FF').name.to_s.should eql "Alice Blue" }
     end
   end
 

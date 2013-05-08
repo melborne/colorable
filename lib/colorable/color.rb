@@ -4,8 +4,15 @@ module Colorable
     include Comparable
     attr_reader :name, :rgb
 
-    # +arg+ can be Colorname, Array of RGB values, also RGB, HSB or NAME object.
-    # Each Color object has output mode, which is :NAME, :RGB or :HSB.
+    # Create a Color object which has several representations of a color.
+    #
+    # +arg+ can be:
+    #   String or Symbol of color name
+    #   String of HEX color
+    #   Array of RGB values
+    #   NAME, RGB, HSB, HEX objects
+    #
+    # Color object has output mode, which is determined by +arg+ type.
     def initialize(arg)
       @name, @rgb, @hsb, @hex, @mode = set_variables(arg)
     end
@@ -16,10 +23,10 @@ module Colorable
 
     # Set output mode.
     def mode=(mode)
-      @mode = 
-        [rgb, hsb, name].detect { |c| c.class.to_s.match /#{mode}/i } || begin
-          raise ArgumentError, "Only accept :NAME, :RGB or :HSB"
-        end
+      modes = [rgb, hsb, name, hex]
+      @mode = modes.detect { |m| m.class.to_s.match /#{mode}/i } || begin
+                raise ArgumentError, "Invalid mode given"
+              end
     end
 
     def to_s
@@ -132,15 +139,21 @@ module Colorable
         hsb = nil
         hex = nil
         mode = name
+      when HEX
+        hex = arg
+        name = hex.to_name
+        rgb = hex.to_rgb
+        hsb = nil
+        mode = hex
       else
-        raise ArgumentError, "'#{arg}' is wrong argument. Colorname, Array of RGB values, also RGB, HSB or NAME object are acceptable"
+        raise ArgumentError
       end
       return name, rgb, hsb, hex, mode
     end
 
     def validate_name(name)
       NAME.new(name).tap do |res|
-        raise NameError, "'#{name}' is not a valid colorname" unless res.name
+        raise NameError, "Invalid color name given" unless res.name
       end
     end
   end

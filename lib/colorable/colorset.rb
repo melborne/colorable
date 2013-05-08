@@ -67,7 +67,7 @@ module Colorable
         when :rgb, *rgb_part then :RGB
         when :hsb, :hsv, *hsb_part then :HSB
         else
-          raise ArgumentError, "'#{opt[:order]}' is not adequate for order option."
+          raise ArgumentError, "Invalid order option given"
         end
 
       colorset = COLORNAMES.map do |name, _|
@@ -90,7 +90,7 @@ module Colorable
       when :-
         colorset.sort_by(&order_cond).reverse
       else
-        raise ArgumentError, "Dir option must  be ':+' or ':-'."
+        raise ArgumentError, "Invalid dir option given"
       end
     end
 
