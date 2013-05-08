@@ -38,11 +38,11 @@ module Colorable
     end
 
     def hex
-      @hex ||= rgb2hex(rgb.to_a)
+      @hex ||= rgb.to_hex
     end
 
     def hsb
-      @hsb ||= HSB.new *rgb2hsb(rgb.to_a)
+      @hsb ||= HSB.new *rgb.to_hsb
     end
     alias :hsv :hsb
 
@@ -95,28 +95,28 @@ module Colorable
     def set_variables(arg)
       case arg
       when String, Symbol
-        name = varidate_name(arg)
-        rgb = RGB.new *name2rgb(name.to_s)
+        name = validate_name(arg)
+        rgb = RGB.new *name.to_rgb
         hsb = nil
         mode = name
       when Array
         rgb = RGB.new *arg
-        name = NAME.new rgb2name(rgb.to_a)
+        name = NAME.new(rgb.to_name) rescue nil
         hsb = nil
         mode = rgb
       when RGB
         rgb = arg
-        name = NAME.new rgb2name(rgb.to_a)
+        name = NAME.new(rgb.to_name) rescue nil
         hsb = nil
         mode = rgb
       when HSB
         hsb = arg
-        rgb = RGB.new *hsb2rgb(hsb.to_a)
-        name = NAME.new rgb2name(rgb.to_a)
+        rgb = RGB.new *hsb.to_rgb
+        name = NAME.new(rgb.to_name) rescue nil
         mode = hsb
       when NAME
         name = arg
-        rgb = RGB.new *name2rgb(name.to_s)
+        rgb = RGB.new *name.to_rgb
         hsb = nil
         mode = name
       else
@@ -126,7 +126,7 @@ module Colorable
       return name, rgb, hsb, hex, mode
     end
 
-    def varidate_name(name)
+    def validate_name(name)
       NAME.new(name).tap do |res|
         raise NameError, "'#{name}' is not a valid colorname" unless res.name
       end

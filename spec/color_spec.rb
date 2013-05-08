@@ -22,8 +22,8 @@ describe Color do
 
       context "of invalid name" do
         it "raise an error" do
-          expect { Color.new("Alice-Blue") }.to raise_error Color::NameError
-          expect { Color.new("Alice") }.to raise_error Color::NameError
+          expect { Color.new("Alice-Blue") }.to raise_error ArgumentError
+          expect { Color.new("Alice") }.to raise_error ArgumentError
         end
       end
     end
@@ -96,7 +96,7 @@ describe Color do
     end
 
     context "when color is not in X11 colorset" do
-      it { Color.new([100,10,10]).name.to_s.should be_nil }
+      it { Color.new([100,10,10]).name.should be_nil }
     end
   end
 
@@ -123,7 +123,7 @@ describe Color do
     end
 
     context "when color is not in X11 colorset" do
-      it { Color.new([100,10,10]).name.to_s.should be_nil }
+      it { Color.new([100,10,10]).name.should be_nil }
     end
   end
 

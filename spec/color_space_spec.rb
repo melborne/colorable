@@ -190,10 +190,9 @@ describe NAME do
     end
 
     context "with invalid name" do
-      subject { NAME.new :abc_color }
-      its(:to_s) { should be_nil }
-      its(:name) { should be_nil }
-      its(:sym) { should be_nil }
+      it "raise ArgumentError" do
+        expect { NAME.new :abc_color }.to raise_error ArgumentError
+      end
     end
   end
 

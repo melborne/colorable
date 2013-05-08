@@ -250,9 +250,15 @@ module Colorable
 
 		private
 		def find_name(name)
-      COLORNAMES.detect do |label, _|
-        [label, name].same? { |str| "#{str}".gsub(/[_\s]/,'').downcase }
-      end.tap {|lbl, _| break lbl if lbl }
+      color, rgb = 
+      	COLORNAMES.detect do |label, _|
+	        [label, name].same? { |str| "#{str}".gsub(/[_\s]/,'').downcase }
+	      end
+      if color
+     		color
+      else
+     		raise ArgumentError, "'#{name}' is not in X11 colorset."
+      end
 		end	
 	end
 end  
