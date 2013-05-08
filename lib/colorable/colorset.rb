@@ -6,9 +6,9 @@ module Colorable
     extend Forwardable
 
     def initialize(opt={})
-      opt = { order: :name, dir: :+, colorset:nil }.merge(opt)
+      opt = { order: :name, dir: :+ }.merge(opt)
       @pos = 0
-      @colorset = build_colorset(opt)
+      @colorset = opt[:colorset] ? opt[:colorset] : build_colorset(opt)
     end
 
     def_delegators :@colorset, :size, :first, :last, :to_a
@@ -70,10 +70,8 @@ module Colorable
           raise ArgumentError, "'#{opt[:order]}' is not adequate for order option."
         end
 
-      colorset = opt[:colorset] || begin
-                   COLORNAMES.map { |name, _|
-                     Colorable::Color.new(name).tap {|c| c.mode = mode }
-                   }
+      colorset = COLORNAMES.map do |name, _|
+                   Colorable::Color.new(name).tap {|c| c.mode = mode }
                  end
 
       order_cond =
