@@ -16,12 +16,10 @@ module Colorable
 
     # Set output mode.
     def mode=(mode)
-      @mode =
-        [rgb, hsb, name].detect { |c| c.class.to_s.match /#{mode}/i }
-                  .tap do |cs|
-                    raise ArgumentError, "Only accept :NAME, :RGB or :HSB" unless cs
-                  end
-      mode
+      @mode = 
+        [rgb, hsb, name].detect { |c| c.class.to_s.match /#{mode}/i } || begin
+          raise ArgumentError, "Only accept :NAME, :RGB or :HSB"
+        end
     end
 
     def to_s
