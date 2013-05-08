@@ -18,7 +18,9 @@ module Colorable
     def mode=(mode)
       @mode =
         [rgb, hsb, name].detect { |c| c.class.to_s.match /#{mode}/i }
-                  .tap { |cs| raise ArgumentError, "Only accept :RGB or :HSB" unless cs }
+                  .tap do |cs|
+                    raise ArgumentError, "Only accept :NAME, :RGB or :HSB" unless cs
+                  end
       mode
     end
 
