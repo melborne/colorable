@@ -50,10 +50,10 @@ describe Color do
   end
 
   describe "#hex" do
-    it { Color.new("Alice Blue").hex.should eql "#F0F8FF" }
-    it { Color.new("Khaki").hex.should eql "#F0E68C" }
-    it { Color.new("Mint Cream").hex.should eql "#F5FFFA" }
-    it { Color.new("Thistle").hex.should eql "#D8BFD8" }
+    it { Color.new("Alice Blue").hex.to_s.should eql "#F0F8FF" }
+    it { Color.new("Khaki").hex.to_s.should eql "#F0E68C" }
+    it { Color.new("Mint Cream").hex.to_s.should eql "#F5FFFA" }
+    it { Color.new("Thistle").hex.to_s.should eql "#D8BFD8" }
   end
 
   describe "#hsb" do

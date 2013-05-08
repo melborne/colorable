@@ -38,7 +38,7 @@ module Colorable
     end
 
     def hex
-      @hex ||= rgb.to_hex
+      @hex ||= HEX.new rgb.to_hex
     end
 
     def hsb
