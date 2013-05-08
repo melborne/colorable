@@ -1,20 +1,16 @@
 module Colorable
   module Converter
-    class NoNameError < StandardError; end
-  
     def name2rgb(name)
-      COLORNAMES.assoc(name)[1]
-    rescue
-      raise NoNameError, "'#{name}' not exist"
+      COLORNAMES.assoc(name).tap{|c, rgb| break rgb if c }
     end
 
     def rgb2name(rgb)
-      COLORNAMES.rassoc(validate_rgb rgb)
+      COLORNAMES.rassoc(rgb)
                 .tap { |c, _| break c if c }
     end
 
     def rgb2hsb(rgb)
-      r, g, b = validate_rgb(rgb).map(&:to_f)
+      r, g, b = rgb.map(&:to_f)
       hue = Math.atan2(Math.sqrt(3)*(g-b), 2*r-g-b).to_degree
 
       min, max = [r, g, b].minmax
@@ -28,7 +24,7 @@ module Colorable
     class NotImplemented < StandardError; end
     def rgb2hsl(rgb)
       raise NotImplemented, 'Not Implemented Yet'
-      r, g, b = validate_rgb(rgb).map(&:to_f)
+      r, g, b = rgb.map(&:to_f)
       hue = Math.atan2(Math.sqrt(3)*(g-b), 2*r-g-b).to_degree
 
       min, max = [r, g, b].minmax
@@ -39,7 +35,7 @@ module Colorable
     end
 
     def hsb2rgb(hsb)
-      hue, sat, bright = validate_hsb(hsb)
+      hue, sat, bright = hsb
       norm = ->range{ hue.norm(range, 0..255) }
       rgb_h =
         case hue
@@ -56,36 +52,15 @@ module Colorable
     alias :hsv2rgb :hsb2rgb
 
     def rgb2hex(rgb)
-      hex = validate_rgb(rgb).map do |val|
+      hex = rgb.map do |val|
         val.to_s(16).tap { |h| break "0#{h}" if h.size==1 }
       end
       '#' + hex.join.upcase
     end
 
     def hex2rgb(hex)
-      _, *hex = validate_hex(hex).unpack('A1A2A2A2')
+      _, *hex = hex.unpack('A1A2A2A2')
       hex.map { |val| val.to_i(16) }
-    end
-  
-    private
-    def validate(type, pattern, data)
-      case Array(data)
-      when Pattern[*Array(pattern)] then data
-      else
-        raise ArgumentError, "'#{data}' is invalid for a #{type} value"
-      end
-    end
-
-    def validate_rgb(rgb)
-      validate(:RGB, [0..255, 0..255, 0..255], rgb)
-    end
-
-    def validate_hsb(hsb)
-      validate(:HSB, [0..359, 0..100, 0..100], hsb)
-    end
-  
-    def validate_hex(hex)
-      validate(:HEX, /^#[0-9A-F]{6}$/i, hex)
     end
   end
 end

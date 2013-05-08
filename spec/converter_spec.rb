@@ -1,43 +1,24 @@
-require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
+require_relative 'spec_helper'
 
 include Colorable::Converter
 describe Colorable::Converter do
   let(:conv) { Colorable::Converter }
   describe "#name2rgb" do
-    context "when name exsist" do
-      it "return a RGB value" do
-        name2rgb("Alice Blue").should eql [240, 248, 255]
-        name2rgb("Khaki").should eql [240, 230, 140]
-        name2rgb("Mint Cream").should eql [245, 255, 250]
-        name2rgb("Thistle").should eql [216, 191, 216]
-      end
-    end
-
-    context "when name not exist" do
-      it "raise NoNameError" do
-        expect { name2rgb("Hello Yellow") }.to raise_error conv::NoNameError
-      end
+    it "return a RGB value" do
+      name2rgb("Alice Blue").should eql [240, 248, 255]
+      name2rgb("Khaki").should eql [240, 230, 140]
+      name2rgb("Mint Cream").should eql [245, 255, 250]
+      name2rgb("Thistle").should eql [216, 191, 216]
+      name2rgb("Hello Yellow").should be_nil
     end
   end
 
   describe "#rgb2name" do
-    context "when name exist" do
-      it "returns a name" do
-        rgb2name([240, 248, 255]).should eql "Alice Blue"
-        rgb2name([216, 191, 216]).should eql "Thistle"
-      end
-    end
-
-    context "when name not exist" do
-      it "returns nil" do
-        rgb2name([240, 240, 240]).should be_nil
-      end
-    end
-
-    context "when invalid rgb" do
-      it "raise ArgumentError" do
-        expect { rgb2name([0, 260, 0]) }.to raise_error ArgumentError
-      end
+    it "returns a name" do
+      rgb2name([240, 248, 255]).should eql "Alice Blue"
+      rgb2name([216, 191, 216]).should eql "Thistle"
+      rgb2name([0, 260, 0]).should be_nil
+      rgb2name([240, 240, 240]).should be_nil
     end
   end
   
@@ -51,8 +32,8 @@ describe Colorable::Converter do
     end
 
     context "when a invalid rgb" do
-      it "raise ArgumentError" do
-        expect { rgb2hsb([100, 100, -10]) }.to raise_error ArgumentError
+      it "not raise ArgumentError" do
+        expect { rgb2hsb([100, 100, -10]) }.not_to raise_error ArgumentError
       end
     end
   end
@@ -67,10 +48,10 @@ describe Colorable::Converter do
     end
 
     context "when a invalid hsb" do
-      it "raise ArgumentError" do
-        expect { hsb2rgb([-100, 50, 50]) }.to raise_error ArgumentError
-        expect { hsb2rgb([350, 101, 50]) }.to raise_error ArgumentError
-        expect { hsb2rgb([0, 50, -50]) }.to raise_error ArgumentError
+      it "not raise ArgumentError" do
+        expect { hsb2rgb([-100, 50, 50]) }.not_to raise_error ArgumentError
+        expect { hsb2rgb([350, 101, 50]) }.not_to raise_error ArgumentError
+        expect { hsb2rgb([0, 50, -50]) }.not_to raise_error ArgumentError
       end
     end
   end
@@ -85,8 +66,8 @@ describe Colorable::Converter do
     end
 
     context "when a invalid rgb" do
-      it "raise ArgumentError" do
-        expect { rgb2hex([100, 100, -10]) }.to raise_error ArgumentError
+      it "not raise ArgumentError" do
+        expect { rgb2hex([100, 100, -10]) }.not_to raise_error ArgumentError
       end
     end
   end
@@ -101,9 +82,9 @@ describe Colorable::Converter do
     end
 
     context "when a invalid hex" do
-      it "raise ArgumentError" do
-        expect { hex2rgb('#FFFFFG') }.to raise_error ArgumentError
-        expect { hex2rgb('$FFFFFG') }.to raise_error ArgumentError
+      it "not raise ArgumentError" do
+        expect { hex2rgb('#FFFFFG') }.not_to raise_error ArgumentError
+        expect { hex2rgb('$FFFFFG') }.not_to raise_error ArgumentError
       end
     end
   end
@@ -119,8 +100,8 @@ describe Colorable::Converter do
     end
 
     context "when a invalid rgb" do
-      it "raise ArgumentError" do
-        expect { rgb2hsb([100, 100, -10]) }.to raise_error ArgumentError
+      it "not raise ArgumentError" do
+        expect { rgb2hsb([100, 100, -10]) }.not_to raise_error ArgumentError
       end
     end
   end
