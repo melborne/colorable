@@ -5,6 +5,12 @@ module Colorable
     include Enumerable
     extend Forwardable
 
+    # Create a X11 colorset object.
+    #
+    # options::keys should be:
+    #          +order+:: :NAME(default), :RGB, :HSB or :HEX can be specified.
+    #          +dir+:: set :+(default) to increment order, :- to decrement order.
+    #          +colorset+:: set original colorset other than X11 if any.
     def initialize(opt={})
       opt = { order: :name, dir: :+ }.merge(opt)
       @pos = 0
@@ -17,20 +23,24 @@ module Colorable
       @colorset.each(&blk)
     end
 
+    # Returns a top color object in colorset
     def at(pos=0)
       @colorset[(@pos+pos)%size]
     end
 
+    # Returns a next color object in colorset
     def next(n=1)
       @pos = (@pos+n)%size
       at
     end
 
+    # Returns a previous color object in colorset
     def prev(n=1)
       @pos = (@pos-n)%size
       at
     end
 
+    # Rewind a cursor to the top
     def rewind
       @pos = 0
       at
@@ -41,10 +51,12 @@ module Colorable
       (@pos+idx)%size if idx
     end
 
+    # Returns a sorted colorset defined by passed block
     def sort_by(&blk)
       self.class.new colorset: @colorset.sort_by(&blk)
     end
 
+    # Returns a reversed colorset
     def reverse
       self.class.new colorset: @colorset.reverse
     end

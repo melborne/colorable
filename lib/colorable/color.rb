@@ -17,6 +17,7 @@ module Colorable
       @name, @rgb, @hsb, @hex, @mode = set_variables(arg)
     end
 
+    # Returns a current output mode
     def mode
       "#{@mode.class}"[/\w+$/].intern
     end
@@ -33,6 +34,7 @@ module Colorable
       @mode.to_s
     end
 
+    # Returns information of the color object
     def info
       {
         NAME: name.to_s,
