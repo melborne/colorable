@@ -106,8 +106,8 @@ module Colorable
       when String, Symbol
         begin
           hex = HEX.new(arg)
-          name = hex.to_name
-          rgb = hex.to_rgb
+          name = NAME.new(hex.to_name) rescue nil
+          rgb = RGB.new *hex.to_rgb
           hsb = nil
           mode = hex
         rescue ArgumentError
@@ -143,8 +143,8 @@ module Colorable
         mode = name
       when HEX
         hex = arg
-        name = hex.to_name
-        rgb = hex.to_rgb
+        name = NAME.new(hex.to_name) rescue nil
+        rgb = RGB.new *hex.to_rgb
         hsb = nil
         mode = hex
       else
