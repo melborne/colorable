@@ -1,6 +1,7 @@
 # Colorable
 
-A simple color handler which provide a conversion between colorname, RGB, HSB and HEX. It also provides a colorset which can be sorted by above color units.
+Colorable is a color handler written in Ruby which include Color and Colorset classes.
+A color object provide a conversion between X11 colorname, RGB, HSB and HEX or other manipulations. a colorset object represent X11 colorset which can be manipulated like enumerable object.
 
 ## Installation
 
@@ -21,33 +22,103 @@ Or install it yourself as:
 Create a color object:
 
     require "colorable"
+    include Colorable
 
-    # Accept X11 color names
-    c = Colorable::Color.new(:green) #=> #<Colorable::Color:0x007fa449954ee0 @name="Green", @rgb=[0, 255, 0], @hex=nil, @hsb=nil, @esc=nil>
-    c.name #=> "Green"
-    c.hsb #=> [120, 100, 100]
-    c.hex #=> "#00FF00"
-    c.to_s #=> "rgb(0,255,0)"
+    # with a X11 colorname
+    c = Color.new :lime_green
+    c.to_s #=> "Lime Green"
+    c.rgb.to_a #=> [50, 205, 50]
+    c.hsb.to_a #=> [120, 76, 80]
+    c.hex.to_s #=> "#32CD32"
+    c.dark? #=> false
 
-    # or RGB
-    c2 = Colorable::Color.new([240, 248, 255]) #=> #<Colorable::Color:0x007fa449a69c90 @name="Alice Blue", @rgb=[240, 248, 255], @hex=nil, @hsb=nil, @esc=nil>
-    c2.name #=> "Alice Blue"
-    c2.rgb #=> [240, 248, 255]
-    c2.hsb #=> [208, 6, 100]
-    c2.hex #=> "#F0F8FF"
-    c2.to_s #=> "rgb(240,248,255)"
+    # with Array of RGB values
+    c = Color.new [50, 205, 50]
+    c.to_s #=> "rgb(50,205,50)"
+    c.name.to_s #=> "Lime Green"
+    c.hsb.to_a #=> [120, 76, 80]
+    c.hex.to_s #=> "#32CD32"
 
-Create a colorset object:
+    # with a HEX string
+    c = Color.new '#32CD32'
+    c.to_s #=> "#32CD32"
 
-    # Default colorset sequence is by its color name order.
-    cs = Colorable::Colorset.new #=> #<Colorset 0/144 pos='Alice Blue:rgb(240,248,255)'>
-    cs.at #=> #<Colorable::Color:0x007fa448beb2b8 @name="Alice Blue", @rgb=[240, 248, 255], @hex=nil, @hsb=nil, @esc=nil>
-    10.times.map { cs.next.name } #=> ["Antique White", "Aqua", "Aquamarine", "Azure", "Beige", "Bisque", "Black", "Blanched Almond", "Blue", "Blue Violet"]
+    # with a RGB, HSB or HEX object
+    c = Color.new RGB.new(50, 205, 50)
+    c = Color.new HSB.new(120, 76, 80)
+    c = Color.new HEX.new('#32CD32')
 
-    # Using Colorset#[], the order of the sequence is specified.
-    cs2 = Colorable::Colorset[:hsb] #=> #<Colorset 0/144 pos='Black:rgb(0,0,0)'>
-    cs2.at #=> #<Colorable::Color:0x007fa448a913e0 @name="Black", @rgb=[0, 0, 0], @hex=nil, @hsb=[0, 0, 0], @esc=nil>
-    10.times.map { cs2.next.hsb } #=> [[0, 0, 41], [0, 0, 50], [0, 0, 66], [0, 0, 75], [0, 0, 75], [0, 0, 83], [0, 0, 86], [0, 0, 96], [0, 0, 100], [0, 2, 100]]
+Manipulate color object:
+
+    c = Color.new :lime_green
+
+    c.to_s #=> "Lime Green"
+    c.rgb.to_a #=> [50, 205, 50]
+    c.hsb.to_a #=> [120, 76, 80]
+    c.hex.to_s #=> "#32CD32"
+    c.dark? #=> false
+
+    # info returns information of the color
+    c.info #=> {:NAME=>"Lime Green", :RGB=>[50, 205, 50], :HSB=>[120, 76, 80], :HEX=>"#32CD32", :MODE=>:NAME, :DARK=>false}
+
+    # next, prev returns next, prev color object in X11 color sequence
+    c.next.to_s #=> "Linen"
+    c.next(2).to_s #=> "Magenta"
+    c.prev.to_s #=> "Lime"
+    c.prev(2).to_s #=> "Light Yellow"
+
+    # +, - returns incremented or decremented color object
+    (c + 1).to_s #=> "Linen"
+    (c + 2).to_s #=> "Magenta"
+    (c - 1).to_s #=> "Lime"
+    (c - 2).to_s #=> "Light Yellow"
+
+Color object has a mode which represent output mode of the color. Behaviours of `#to_s`, `next`, `prev`, `+`, `-` will be changed based on the mode. You can change the mode with `#mode=` between :NAME, :RGB, :HSB, :HEX.
+
+    c = Color.new 'Lime Green'
+    c.mode = :NAME
+    c.to_s #=> "Lime Green"
+    c.next.to_s #=> "Linen"
+
+    c.mode = :RGB
+    c.to_s #=> "rgb(50,205,50)"
+    c.next.to_s #=> "rgb(60,179,113)"
+    c.next.name.to_s #=> "Medium Sea Green"
+    (c + 10).to_s #=> "rgb(60,215,60)"
+    (c + [0, 50, 100]).to_s #=> "rgb(50, 255, 150)"
+
+
+Create a X11 colorset object:
+
+    include Colorable
+
+    cs = Colorset.new #=> #<Colorset 0/144 pos='Alice Blue/rgb(240,248,255)/hsb(208,6,100)'>
+
+    # with option
+    cs = Colorset.new(order: :RGB) #=> #<Colorset 0/144 pos='Black/rgb(0,0,0)/hsb(0,0,0)'>
+    cs = Colorset.new(order: :HSB, dir: :-) #=> #<Colorset 0/144 pos='Light Pink/rgb(255,182,193)/hsb(352,29,100)'>
+
+Manupilate colorset:
+
+    cs = Colorset.new
+    cs.size #=> 144
+    cs.at.to_s #=> "Alice Blue"
+    cs.at(1).to_s #=> "Antique White"
+    cs.at(2).to_s #=> "Aqua"
+
+    # next(prev) methods moves cursor position
+    cs.next.to_s #=> "Antique White"
+    cs.at.to_s #=> "Antique White"
+    cs.next.to_s #=> "Aqua"
+    cs.at.to_s #=> "Aqua"
+    cs.rewind
+    cs.at.to_s #=> "Alice Blue"
+
+    cs.map(&:to_s).take(10) #=> ["Alice Blue", "Antique White", "Aqua", "Aquamarine", "Azure", "Beige", "Bisque", "Black", "Blanched Almond", "Blue"]
+
+    cs.sort_by(&:rgb).map(&:to_s).take(10) #=> ["Black", "Navy", "Dark Blue", "Medium Blue", "Blue", "Dark Green", "Green2", "Teal", "Dark Cyan", "Deep Sky Blue"]
+
+    cs.sort_by(&:hsb).map(&:to_s).take(10) #=> ["Black", "Dim Gray", "Gray2", "Dark Gray", "Gray", "Silver", "Light Gray", "Gainsboro", "White Smoke", "White"]
 
 
 ## Contributing
