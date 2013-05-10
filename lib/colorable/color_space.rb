@@ -209,8 +209,8 @@ module Colorable
 
 		alias :to_s :name
 
-		def sym
-			@name.gsub(/\s/, '_').downcase.intern if @name
+		def sym(sep='_')
+			@name.gsub(/\s/, sep).downcase.intern if @name
 		end
 
 		def dark?
