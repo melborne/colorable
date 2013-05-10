@@ -13,5 +13,5 @@ module Colorable
 end
 
 [String, Symbol, Array].each do |klass|
-	klass.define_method(:to_color) { Colorable::Color.new self }
+	klass.class_eval { define_method(:to_color) { Colorable::Color.new self } }
 end
