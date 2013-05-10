@@ -118,6 +118,7 @@ module Colorable
           mode = name
         end
       when Array
+        raise ArgumentError, 'Invalid Array given' unless arg.size==3
         rgb = RGB.new *arg
         name = NAME.new(rgb.to_name) rescue nil
         hsb = nil

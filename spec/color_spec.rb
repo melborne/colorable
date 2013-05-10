@@ -54,6 +54,7 @@ describe Color do
       context "of invalid RGB value" do
         it "raise an error" do
           expect { Color.new([200, 100, 260]) }.to raise_error ArgumentError
+          expect { Color.new([200, 100]) }.to raise_error ArgumentError
         end
       end
     end
