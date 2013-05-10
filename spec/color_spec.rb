@@ -112,6 +112,12 @@ describe Color do
       it { @c.next(2).to_s.should eql "hsb(60,6,100)" } #Ivory
     end
 
+    context "with :HEX mode" do
+      subject { Color.new '#32CD32' }
+      it { subject.next.to_s.should eql "#3CB371" }
+      it { subject.next(2).to_s.should eql "#40E0D0" }
+    end
+
     context "when color is not in X11 colorset" do
       it { Color.new([100,10,10]).name.should be_nil }
     end
@@ -137,6 +143,12 @@ describe Color do
       end
       it { @c.prev.to_s.should eql "hsb(55,29,93)" } #Pale Goldenrod
       it { @c.prev(2).to_s.should eql "hsb(55,20,100)" } #Lemon Chiffon
+    end
+
+    context "with :HEX mode" do
+      subject { Color.new '#32CD32' }
+      it { subject.prev.to_s.should eql "#2F4F4F" }
+      it { subject.prev(2).to_s.should eql "#2E8B57" }
     end
 
     context "when color is not in X11 colorset" do

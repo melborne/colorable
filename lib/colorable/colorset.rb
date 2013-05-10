@@ -78,6 +78,7 @@ module Colorable
         when :name then :NAME
         when :rgb, *rgb_part then :RGB
         when :hsb, :hsv, *hsb_part then :HSB
+        when :hex then :HEX
         else
           raise ArgumentError, "Invalid order option given"
         end
@@ -92,7 +93,7 @@ module Colorable
           ->color{ color.rgb.move_to_top rgb_part.index(order) }
         when *hsb_part
           ->color{ color.hsb.move_to_top hsb_part.index(order) }
-        when :name, :rgb, :hsb, :hsv
+        when :name, :rgb, :hsb, :hsv, :hex
           ->color{ color.send order }
         end
 
@@ -105,6 +106,5 @@ module Colorable
         raise ArgumentError, "Invalid dir option given"
       end
     end
-
   end
 end

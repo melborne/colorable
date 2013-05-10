@@ -32,6 +32,12 @@ describe Colorset do
       it { subject.take(3).map(&:to_s).should eql ['hsb(0,0,0)', 'hsb(0,0,41)', 'hsb(0,0,50)'] }
       it { subject.last.to_s.should eql 'hsb(352,29,100)' }
     end
+
+    context "with HEX order" do
+      subject { Colorset.new order: :hex }
+      it { subject.take(3).map(&:to_s).should eql ["#000000", "#000080", "#00008B"] }
+      it { subject.last.to_s.should eql '#FFFFFF' }
+    end
   end
 
   describe "#at" do
