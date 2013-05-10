@@ -64,7 +64,11 @@ module Colorable
     end
 
     def <=>(other)
-      self.rgb <=> other.rgb
+      if [self.name, other.name].any?(&:nil?)
+        self.rgb <=> other.rgb
+      else
+        self.name <=> other.name
+      end
     end
 
     @@colorset = {}

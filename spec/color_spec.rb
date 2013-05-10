@@ -283,4 +283,21 @@ describe Color do
       Color.new(:black).info.should eql info
     end
   end
+
+  describe "#<=>" do
+    context "same colornames are same object" do
+      it { Color.new('Green').should == Color.new('Green') }
+    end
+
+    context "different colornames are different object even if its RGB are same" do
+      subject { Color.new('Green') }
+      it { should_not == Color.new('Lime') }
+      its(:rgb) { should == Color.new('Lime').rgb }
+    end
+
+    context "no name object compare by its RGB value" do
+      subject { Color.new [0, 1, 2] }
+      it { should_not == Color.new([0, 1, 3]) }
+    end
+  end
 end
