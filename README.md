@@ -87,6 +87,19 @@ Color object has a mode which represent output mode of the color. Behaviours of 
     (c + 10).to_s #=> "rgb(60,215,60)"
     (c + [0, 50, 100]).to_s #=> "rgb(50, 255, 150)"
 
+Shortcut for creating a color object with #to_color of String, Symbol and Array:
+
+    c = "Lime Green".to_color
+    c.class #=> Colorable::Color
+
+    c = :lime_green.to_color
+    c.class #=> Colorable::Color
+
+    c = "#32CD32".to_color
+    c.class #=> Colorable::Color
+
+    c = [50, 205, 50].to_color
+    c.class #=> Colorable::Color
 
 Create a X11 colorset object:
 
