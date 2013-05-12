@@ -244,10 +244,10 @@ describe Color do
         @c3 = Color.new [0, 255, 255]
         @c4 = Color.new [0, 100, 255]
       end
-      it { (@c1 + @c2).to_s.should eql 'Red' }
-      it { (@c3 + @c4).to_s.should eql 'rgb(0,100,255)' }
-      it { (@c1 + @c3).to_s.should eql 'Black' }
-      it { (@c4 + @c1).to_s.should eql 'rgb(0,0,0)' }
+      it { (@c1 + @c2).to_s.should eql 'White' }
+      it { (@c3 + @c4).to_s.should eql 'rgb(0,255,255)' }
+      it { (@c1 + @c3).to_s.should eql 'White' }
+      it { (@c4 + @c1).to_s.should eql 'rgb(255,100,255)' }
     end
   end
 
@@ -285,10 +285,10 @@ describe Color do
         @c3 = Color.new [0, 255, 255]
         @c4 = Color.new [0, 100, 255]
       end
-      it { (@c1 - @c2).to_s.should eql 'White' }
-      it { (@c3 - @c4).to_s.should eql 'rgb(0,255,255)' }
-      it { (@c1 - @c3).to_s.should eql 'White' }
-      it { (@c4 - @c1).to_s.should eql 'rgb(255,100,255)' }
+      it { (@c1 - @c2).to_s.should eql 'Red' }
+      it { (@c3 - @c4).to_s.should eql 'rgb(0,100,255)' }
+      it { (@c1 - @c3).to_s.should eql 'Black' }
+      it { (@c4 - @c1).to_s.should eql 'rgb(0,0,0)' }
     end
   end
 
