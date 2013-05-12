@@ -63,7 +63,7 @@ module Colorable
 				else
 					raise ArgumentError, "Accept only Array of three numbers or a Fixnum"
 				end
-			new_rgb = self.rgb.zip(arg).map { |x, y| x + y }
+			new_rgb = self.rgb.zip(arg).map { |x, y| (x + y) % 256 }
 			self.class.new *new_rgb
 		end
 
@@ -107,7 +107,7 @@ module Colorable
 				else
 					raise ArgumentError, "Accept only Array of three numbers"
 				end
-			new_hsb = self.hsb.zip(arg).map { |x, y| x + y }
+			new_hsb = self.hsb.zip(arg, [361, 101, 101]).map { |x, y, div| (x + y) % div }
 			self.class.new *new_hsb
 		end
 
@@ -194,7 +194,7 @@ module Colorable
 				else
 					raise ArgumentError, "Accept only a Hex string or a Fixnum"
 				end	
-			rgb = hex2rgb(self.hex).zip(_rgb).map { |x, y| x.send(op, y) }
+			rgb = hex2rgb(self.hex).zip(_rgb).map { |x, y| (x.send(op, y)) % 256 }
 			self.class.new rgb2hex(rgb)
     end
 	end

@@ -35,22 +35,27 @@ describe RGB do
       before(:all) { @rgb = RGB.new(100, 100, 100) }
       subject { @rgb + [0, 50, 100] }
       its(:rgb) { should eql [100, 150, 200] }
-      it "keep original same" do @rgb.rgb.should eql [100, 100, 100] end
+      it "keep original same" do
+        @rgb.rgb.should eql [100, 100, 100]
+      end
     end
 
     context "when '+' makes out of RGB range or rack of numbers" do
       it "raise ArgumentError" do
-        expect { RGB.new(100, 100, 100) + [0, 50, 200] }.to raise_error ArgumentError
-        expect { RGB.new(100, 100, 100) + [0, -150, 0] }.to raise_error ArgumentError
         expect { RGB.new(100, 100, 100) + [0, 150] }.to raise_error ArgumentError
+      end
+
+      it "not raise ArgumentError" do
+        expect { RGB.new(100, 100, 100) + [0, 50, 200] }.not_to raise_error ArgumentError
+        expect { RGB.new(100, 100, 100) + [0, -150, 0] }.not_to raise_error ArgumentError
       end
     end
 
     context "pass a Fixnum" do
       before(:all) { @rgb = RGB.new(100, 100, 100) }
       it { (@rgb + 50).rgb.should eql [150, 150, 150] }
-      it "raise ArgumentError" do
-        expect { @rgb + 160 }.to raise_error ArgumentError
+      it "not raise ArgumentError" do
+        expect { @rgb + 160 }.not_to raise_error ArgumentError
       end
     end
 
@@ -64,21 +69,23 @@ describe RGB do
       before(:all) { @rgb = RGB.new(100, 100, 100) }
       subject { @rgb - [0, 50, 100] }
       its(:rgb) { should eql [100, 50, 0] }
-      it "keep original same" do @rgb.rgb.should eql [100, 100, 100] end
+      it "keep original same" do
+        @rgb.rgb.should eql [100, 100, 100]
+      end
     end
 
     context "when '-' makes out of RGB range" do
-      it "raise ArgumentError" do
-        expect { RGB.new(100, 100, 100) - [0, 50, 200] }.to raise_error ArgumentError
-        expect { RGB.new(100, 100, 100) - [0, -250, 0] }.to raise_error ArgumentError
+      it "not raise ArgumentError" do
+        expect { RGB.new(100, 100, 100) - [0, 50, 200] }.not_to raise_error ArgumentError
+        expect { RGB.new(100, 100, 100) - [0, -250, 0] }.not_to raise_error ArgumentError
       end
     end
 
     context "pass a Fixnum" do
       before(:all) { @rgb = RGB.new(100, 100, 100) }
       it { (@rgb - 50).rgb.should eql [50, 50, 50] }
-      it "raise ArgumentError" do
-        expect { @rgb - 160 }.to raise_error ArgumentError
+      it "not raise ArgumentError" do
+        expect { @rgb - 160 }.not_to raise_error ArgumentError
       end
     end
   end
@@ -139,10 +146,13 @@ describe HSB do
 
     context "when '+' makes out of HSB range or rack of numbers" do
       it "raise ArgumentError" do
-        expect { HSB.new(300, 70, 90) + [0, 50, 0] }.to raise_error ArgumentError
-        expect { HSB.new(300, 70, 90) + [0, 0, -100] }.to raise_error ArgumentError
         expect { HSB.new(300, 70, 90) + [0, 5] }.to raise_error ArgumentError
         expect { HSB.new(300, 70, 90) + 5 }.to raise_error ArgumentError
+      end
+
+      it "not raise ArgumentError" do
+        expect { HSB.new(300, 70, 90) + [0, 50, 0] }.not_to raise_error ArgumentError
+        expect { HSB.new(300, 70, 90) + [0, 0, -100] }.not_to raise_error ArgumentError
       end
     end
   end
@@ -156,9 +166,9 @@ describe HSB do
     end
 
     context "when '-' makes out of HSB range" do
-      it "raise ArgumentError" do
-        expect { HSB.new(300, 7, 90) - [305, 0, 10] }.to raise_error ArgumentError
-        expect { HSB.new(300, 70, 90) - [0, -35, 0] }.to raise_error ArgumentError
+      it "not raise ArgumentError" do
+        expect { HSB.new(300, 7, 90) - [305, 0, 10] }.not_to raise_error ArgumentError
+        expect { HSB.new(300, 70, 90) - [0, -35, 0] }.not_to raise_error ArgumentError
       end
     end
   end
@@ -283,12 +293,17 @@ describe HEX do
       it { (@hex + '#00ffcc').hex.should eql '#FFFFCC'}
       it { (@hex + '00FFCC').hex.should eql '#FFFFCC'}
       it { (@hex + '#0FC').hex.should eql '#FFFFCC'}
-      it "keep original" do @hex.hex.should eql '#FF0000' end
+      it "keep original" do
+        @hex.hex.should eql '#FF0000'
+      end
     end
 
-    context "out of HEX range" do
+    context "out of HEX range or Array" do
+      it "not raise ArgumentError" do
+        expect { HEX.new('#FF0000') + '#010000' }.not_to raise_error ArgumentError
+      end
+      
       it "raise ArgumentError" do
-        expect { HEX.new('#FF0000') + '#010000' }.to raise_error ArgumentError
         expect { HEX.new('#FF0000') + '#00ffgg' }.to raise_error ArgumentError
         expect { HEX.new('#000000') + [0, 50, 100] }.to raise_error ArgumentError
       end
@@ -297,8 +312,8 @@ describe HEX do
     context "pass a Fixnum" do
       before(:all) { @hex = HEX.new('#000000') }
       it { (@hex + 255).hex.should eql '#FFFFFF' }
-      it "raise ArgumentError" do
-        expect { @hex + 260 }.to raise_error ArgumentError
+      it "not raise ArgumentError" do
+        expect { @hex + 260 }.not_to raise_error ArgumentError
       end
     end
 
@@ -314,13 +329,18 @@ describe HEX do
       it { (@hex - '#00ffcc').hex.should eql '#000033'}
       it { (@hex - '00FFCC').hex.should eql '#000033'}
       it { (@hex - '#0FC').hex.should eql '#000033'}
-      it "keep original" do @hex.hex.should eql '#00FFFF' end
+      it "keep original" do
+        @hex.hex.should eql '#00FFFF'
+      end
     end
 
-    context "out of HEX range" do
+    context "out of HEX range or Array" do
+      it "not raise ArgumentError" do
+        expect { HEX.new('#FF0000') - '#000100' }.not_to raise_error ArgumentError
+        expect { HEX.new('#FF0000') - '#0000cc' }.not_to raise_error ArgumentError
+      end
+
       it "raise ArgumentError" do
-        expect { HEX.new('#FF0000') - '#000100' }.to raise_error ArgumentError
-        expect { HEX.new('#FF0000') - '#0000cc' }.to raise_error ArgumentError
         expect { HEX.new('#000000') - [0, 50, 100] }.to raise_error ArgumentError
       end
     end
@@ -328,8 +348,8 @@ describe HEX do
     context "pass a Fixnum" do
       before(:all) { @hex = HEX.new('#FFFFFF') }
       it { (@hex - 255).hex.should eql '#000000' }
-      it "raise ArgumentError" do
-        expect { @hex + 260 }.to raise_error ArgumentError
+      it "not raise ArgumentError" do
+        expect { @hex + 260 }.not_to raise_error ArgumentError
       end
     end
 
