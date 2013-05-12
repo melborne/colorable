@@ -52,32 +52,42 @@ module Colorable
 
 		# Pass Array of [r, g, b], a Fixnum or a RGB object.
 		# Returns new RGB object with added RGB.
-		def +(arg)
-			new_rgb =
-				case arg
+		def +(other)
+			rgb =
+				case other
 				when Fixnum
-					self.rgb.zip([arg] * 3).map { |x, y| (x + y) % 256 }
+					compound_by([other] * 3) { |a, b| (a + b) % 256 }
 				when Array
-					raise ArgumentError, "Must be three numbers contained" unless arg.size==3
-					self.rgb.zip(arg).map { |x, y| (x + y) % 256 }
+					raise ArgumentError, "Invalid size of Array given" unless other.size==3
+					compound_by(other) { |a, b| (a + b) % 256 }
         when RGB
-          self.rgb.zip(arg.rgb).map { |a, b| [a+b, 255].min }
+          compound_by(other.rgb) { |a, b| [a+b, 255].min }
 				else
-					raise ArgumentError, "Accept a RGB objcet, Array of three numbers or a Fixnum"
+					raise ArgumentError, "Invalid argument given"
 				end
-			self.class.new *new_rgb
+			self.class.new *rgb
 		end
 
 		# Pass Array of [r, g, b], a Fixnum or a RGB object.
 		# Returns new RGB object with subtructed RGB.
-    def -(arg)
-      case arg
+    def -(other)
+      case other
       when RGB
-        new_rgb = self.rgb.zip(arg.rgb).map { |a, b| [a+b-255, 0].max }
-  			self.class.new *new_rgb
+        rgb = compound_by(other.rgb) { |a, b| [a+b-255, 0].max }
+  			self.class.new *rgb
       else
         super
       end
+    end
+
+    def *(other)
+      rgb = compound_by(other.rgb) { |a, b| [(a*b/255.0).round, 0].max }
+      self.class.new *rgb
+    end
+
+    def /(other)
+      rgb = compound_by(other.rgb) { |a, b| [a+b-(a*b/255.0).round, 255].min }
+      self.class.new *rgb
     end
 
 		def to_name
@@ -95,6 +105,10 @@ module Colorable
 		private
     def validate_rgb(rgb)
       validate([0..255, 0..255, 0..255], rgb)
+    end
+
+    def compound_by(rgb, &blk)
+      self.rgb.zip(rgb).map(&blk)
     end
 	end
 

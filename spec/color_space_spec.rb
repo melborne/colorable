@@ -114,6 +114,34 @@ describe RGB do
     end
   end
 
+  describe "#*" do
+    context "pass a RGB object" do
+      before(:each) do
+        @a = RGB.new(100, 100, 255)
+        @b = RGB.new(255, 100, 100)
+        @c = RGB.new(100, 255, 100)
+      end
+      it { (@a * @b).rgb.should eql [100, 39, 100] }
+      it { (@b * @c).rgb.should eql [100, 100, 39] }
+      it { (@a * @c).rgb.should eql [39, 100, 100] }
+      it { (@a * @b * @c).rgb.should eql [39, 39, 39] }
+    end
+  end
+
+  describe "#/" do
+    context "pass a RGB object" do
+      before(:each) do
+        @a = RGB.new(100, 100, 255)
+        @b = RGB.new(255, 100, 100)
+        @c = RGB.new(100, 255, 100)
+      end
+      it { (@a / @b).rgb.should eql [255, 161, 255] }
+      it { (@b / @c).rgb.should eql [255, 255, 161] }
+      it { (@a / @c).rgb.should eql [161, 255, 255] }
+      it { (@a / @b / @c).rgb.should eql [255, 255, 255] }
+    end
+  end
+
   describe "#to_s" do
     it { RGB.new(0, 50, 100).to_s.should eql "rgb(0,50,100)"}
   end
