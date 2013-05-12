@@ -34,15 +34,19 @@ module Colorable
       @mode.to_s
     end
 
+    def inspect
+      "#<%s '%s<%s/%s/%s>'>" % [self.class, name, rgb, hsb, hex]
+    end
+
     # Returns information of the color object
     def info
       {
-        NAME: name.to_s,
-        RGB: rgb.to_a,
-        HSB: hsb.to_a,
-        HEX: hex.to_s,
-        MODE: mode,
-        DARK: dark?
+        name: name.to_s,
+        rgb: rgb.to_a,
+        hsb: hsb.to_a,
+        hex: hex.to_s,
+        mode: mode,
+        dark: dark?
       }
     end
 

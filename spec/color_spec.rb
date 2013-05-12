@@ -177,10 +177,6 @@ describe Color do
   end
 
   describe "#to_s" do
-    context "default" do
-      it { Color.new(:alice_blue).to_s.should eql "Alice Blue" }
-    end
-
     context "with name mode" do
       before do
         @c = Color.new(:alice_blue)
@@ -207,6 +203,11 @@ describe Color do
       it { @c.mode.should eql :HSB }
       it { @c.to_s.should eql "hsb(208,6,100)" }
     end
+  end
+
+  describe "#inspect" do
+    subject { Color.new :alice_blue }
+    its(:inspect) { should eql "#<Colorable::Color 'Alice Blue<rgb(240,248,255)/hsb(208,6,100)/#F0F8FF>'>"}
   end
 
   describe "#+" do
@@ -273,12 +274,12 @@ describe Color do
   describe "#info" do
     it 'returns data of the color' do
       info = { 
-        NAME:'Black',
-        RGB:[0, 0, 0],
-        HSB:[0, 0, 0],
-        HEX:'#000000',
-        MODE: :NAME,
-        DARK:true
+        name:'Black',
+        rgb:[0, 0, 0],
+        hsb:[0, 0, 0],
+        hex:'#000000',
+        mode: :NAME,
+        dark:true
       }
       Color.new(:black).info.should eql info
     end
