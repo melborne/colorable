@@ -83,6 +83,7 @@ module Colorable
       idx = @@colorset[mode].find_index(self)
       @@colorset[mode].at(idx+n).tap{|c| c.mode = mode } if idx
     end
+    alias :succ :next
 
     # Returns a previous color object in X11 colors.
     # The color sequence is determined by its color mode.
