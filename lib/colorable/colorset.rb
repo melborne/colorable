@@ -62,7 +62,7 @@ module Colorable
     end
  
     def to_s
-      "#<%s %d/%d pos='%s/%s/%s'>" % [:Colorset, @pos, size, at.name, at.rgb, at.hsb]
+      "#<%s %d/%d pos='%s<%s/%s>'>" % [self.class, @pos, size, at.name, at.rgb, at.hsb]
     end
     alias :inspect :to_s
 

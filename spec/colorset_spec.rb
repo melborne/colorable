@@ -88,7 +88,7 @@ describe Colorset do
 
   describe "#to_s" do
     before(:all) { @cs = Colorset.new }
-    it { @cs.to_s.should eql "#<Colorset 0/144 pos='Alice Blue/rgb(240,248,255)/hsb(208,6,100)'>"}
-    it { @cs.next;@cs.to_s.should eql "#<Colorset 1/144 pos='Antique White/rgb(250,235,215)/hsb(35,14,98)'>"}
+    it { @cs.to_s.should eql "#<Colorable::Colorset 0/144 pos='Alice Blue<rgb(240,248,255)/hsb(208,6,100)>'>"}
+    it { @cs.next;@cs.to_s.should eql "#<Colorable::Colorset 1/144 pos='Antique White<rgb(250,235,215)/hsb(35,14,98)>'>"}
   end
 end
