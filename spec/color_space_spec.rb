@@ -62,6 +62,16 @@ describe RGB do
     context "coerce make Fixnum#+ accept rgb object" do
       it { (10 + RGB.new(100, 100, 100)).rgb.should eql [110, 110, 110] }
     end
+
+    context "pass a RGB object" do
+      before(:each) do
+        @c = RGB.new(100, 100, 100)
+      end
+      it "takes min values of each part" do
+        (@c + RGB.new(50, 150, 200)).rgb.should eql [50, 100, 100]
+        (@c + RGB.new(0, 0, 0)).rgb.should eql [0, 0, 0]
+      end
+    end
   end
 
   describe "#-" do
@@ -86,6 +96,16 @@ describe RGB do
       it { (@rgb - 50).rgb.should eql [50, 50, 50] }
       it "not raise ArgumentError" do
         expect { @rgb - 160 }.not_to raise_error ArgumentError
+      end
+    end
+
+    context "pass a RGB object" do
+      before(:each) do
+        @c = RGB.new(100, 100, 100)
+      end
+      it "takes min values of each part" do
+        (@c - RGB.new(50, 150, 200)).rgb.should eql [100, 150, 200]
+        (@c - RGB.new(0, 0, 0)).rgb.should eql [100, 100, 100]
       end
     end
   end
