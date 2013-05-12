@@ -50,7 +50,7 @@ module Colorable
 		alias :blue :b
 		alias :to_a :rgb
 
-		# Pass Array of [r, g, b] or a Fixnum.
+		# Pass Array of [r, g, b], a Fixnum or a RGB object.
 		# Returns new RGB object with added RGB.
 		def +(arg)
 			new_rgb =
@@ -61,17 +61,19 @@ module Colorable
 					raise ArgumentError, "Must be three numbers contained" unless arg.size==3
 					self.rgb.zip(arg).map { |x, y| (x + y) % 256 }
         when RGB
-          self.rgb.zip(arg.rgb).map(&:min)
+          self.rgb.zip(arg.rgb).map { |a, b| [a+b, 255].min }
 				else
 					raise ArgumentError, "Accept a RGB objcet, Array of three numbers or a Fixnum"
 				end
 			self.class.new *new_rgb
 		end
 
+		# Pass Array of [r, g, b], a Fixnum or a RGB object.
+		# Returns new RGB object with subtructed RGB.
     def -(arg)
       case arg
       when RGB
-        new_rgb = self.rgb.zip(arg.rgb).map(&:max)
+        new_rgb = self.rgb.zip(arg.rgb).map { |a, b| [a+b-255, 0].max }
   			self.class.new *new_rgb
       else
         super

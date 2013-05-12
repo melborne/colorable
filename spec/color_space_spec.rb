@@ -65,12 +65,14 @@ describe RGB do
 
     context "pass a RGB object" do
       before(:each) do
-        @c = RGB.new(100, 100, 100)
+        @a = RGB.new(100, 100, 255)
+        @b = RGB.new(255, 100, 100)
+        @c = RGB.new(100, 255, 100)
       end
-      it "takes min values of each part" do
-        (@c + RGB.new(50, 150, 200)).rgb.should eql [50, 100, 100]
-        (@c + RGB.new(0, 0, 0)).rgb.should eql [0, 0, 0]
-      end
+      it { (@a + @b).rgb.should eql [255, 200, 255] }
+      it { (@b + @c).rgb.should eql [255, 255, 200] }
+      it { (@a + @c).rgb.should eql [200, 255, 255] }
+      it { (@a + @b + @c).rgb.should eql [255, 255, 255] }
     end
   end
 
@@ -101,12 +103,14 @@ describe RGB do
 
     context "pass a RGB object" do
       before(:each) do
-        @c = RGB.new(100, 100, 100)
+        @a = RGB.new(100, 100, 255)
+        @b = RGB.new(255, 100, 100)
+        @c = RGB.new(100, 255, 100)
       end
-      it "takes min values of each part" do
-        (@c - RGB.new(50, 150, 200)).rgb.should eql [100, 150, 200]
-        (@c - RGB.new(0, 0, 0)).rgb.should eql [100, 100, 100]
-      end
+      it { (@a - @b).rgb.should eql [100, 0, 100] }
+      it { (@b - @c).rgb.should eql [100, 100, 0] }
+      it { (@a - @c).rgb.should eql [0, 100, 100] }
+      it { (@a - @b - @c).rgb.should eql [0, 0, 0] }
     end
   end
 
