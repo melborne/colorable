@@ -99,14 +99,26 @@ module Colorable
     # Array of values or a Fixnum is acceptable as an argument.
     # Which values are affected is determined by its color mode.
     def +(arg)
-      self.class.new @mode + arg
+      case arg
+      when Color
+        new_rgb = self.rgb + arg.rgb
+        self.class.new(new_rgb).tap { |c| c.mode = self.mode }
+      else
+        self.class.new @mode + arg
+      end
     end
 
     # Returns a color object which has decremented color values.
     # Array of values or a Fixnum is acceptable as an argument.
     # Which values are affected is determined by its color mode.
     def -(arg)
-      self.class.new @mode - arg
+      case arg
+      when Color
+        new_rgb = self.rgb - arg.rgb
+        self.class.new(new_rgb).tap { |c| c.mode = self.mode }
+      else
+        self.class.new @mode - arg
+      end
     end
 
     private
