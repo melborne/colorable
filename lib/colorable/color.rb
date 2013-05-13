@@ -95,7 +95,7 @@ module Colorable
       !!DARK_COLORS.detect { |d| d == name.to_s }
     end
 
-		# Color addition
+    # Color addition
     #
     # +other+ can be:
     #   Color object: apply minimum compositing with its RGBs.
@@ -109,7 +109,7 @@ module Colorable
       end
     end
 
-		# Color subtruction
+    # Color subtruction
     #
     # +other+ can be:
     #   Color object: apply maximum compositing with its RGBs.
