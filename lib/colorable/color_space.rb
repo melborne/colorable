@@ -53,7 +53,7 @@ module Colorable
 		# Color addition
     #
     # +other+ can be:
-    #   RGB object: apply minimum compositing
+    #   RGB object: apply minimum compositing.
     #   Array of RGB values: each values added to each of RGBs.
     #   Fixnum: other number added to all of RGBs.
 		def +(other)
@@ -75,7 +75,7 @@ module Colorable
 		# Color subtruction
     #
     # +other+ can be:
-    #   RGB object: apply maximum compositing
+    #   RGB object: apply maximum compositing.
     #   Array of RGB values: each values added to each of RGBs.
     #   Fixnum: other number added to all of RGBs.
     def -(other)
@@ -91,7 +91,7 @@ module Colorable
     # Color multiplication
     #
     # +other+ should be a Color object.
-    # It applies multiply compositing
+    # It applies multiply compositing.
     def *(other)
       raise ArgumentError, "Invalid argument given" unless other.is_a?(RGB)
       rgb = compound_by(other.rgb) { |a, b| [(a*b/255.0).round, 0].max }
@@ -101,7 +101,7 @@ module Colorable
     # Color division
     #
     # +other+ should be a Color object.
-    # It applies screen compositing
+    # It applies screen compositing.
     def /(other)
       raise ArgumentError, "Invalid argument given" unless other.is_a?(RGB)
       rgb = compound_by(other.rgb) { |a, b| [a+b-(a*b/255.0).round, 255].min }

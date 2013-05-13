@@ -95,9 +95,11 @@ module Colorable
       !!DARK_COLORS.detect { |d| d == name.to_s }
     end
 
-    # Returns a color object which has incremented color values.
-    # Array of values or a Fixnum is acceptable as an argument.
-    # Which values are affected is determined by its color mode.
+		# Color addition
+    #
+    # +other+ can be:
+    #   Color object: apply minimum compositing with its RGBs.
+    #   Array of values or Fixnum: addiction applies based on its color mode.
     def +(other)
       case other
       when Color
@@ -107,9 +109,11 @@ module Colorable
       end
     end
 
-    # Returns a color object which has decremented color values.
-    # Array of values or a Fixnum is acceptable as an argument.
-    # Which values are affected is determined by its color mode.
+		# Color subtruction
+    #
+    # +other+ can be:
+    #   Color object: apply maximum compositing with its RGBs.
+    #   Array of values or Fixnum: subtruction applies based on its color mode.
     def -(other)
       case other
       when Color
@@ -119,10 +123,18 @@ module Colorable
       end
     end
 
+    # Color multiplication
+    #
+    # +other+ should be a Color object.
+    # It applies multiply compositing with its RGBs.
     def *(other)
       new_by_composed_rgb(:*, other)
     end
 
+    # Color division
+    #
+    # +other+ should be a Color object.
+    # It applies screen compositing with its RGBs.
     def /(other)
       new_by_composed_rgb(:/, other)
     end
