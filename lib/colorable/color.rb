@@ -98,27 +98,33 @@ module Colorable
     # Returns a color object which has incremented color values.
     # Array of values or a Fixnum is acceptable as an argument.
     # Which values are affected is determined by its color mode.
-    def +(arg)
-      case arg
+    def +(other)
+      case other
       when Color
-        new_rgb = self.rgb + arg.rgb
-        self.class.new(new_rgb).tap { |c| c.mode = self.mode }
+        new_by_composed_rgb(:+, other)
       else
-        self.class.new @mode + arg
+        self.class.new @mode + other
       end
     end
 
     # Returns a color object which has decremented color values.
     # Array of values or a Fixnum is acceptable as an argument.
     # Which values are affected is determined by its color mode.
-    def -(arg)
-      case arg
+    def -(other)
+      case other
       when Color
-        new_rgb = self.rgb - arg.rgb
-        self.class.new(new_rgb).tap { |c| c.mode = self.mode }
+        new_by_composed_rgb(:-, other)
       else
-        self.class.new @mode - arg
+        self.class.new @mode - other
       end
+    end
+
+    def *(other)
+      new_by_composed_rgb(:*, other)
+    end
+
+    def /(other)
+      new_by_composed_rgb(:/, other)
     end
 
     private
@@ -179,6 +185,11 @@ module Colorable
       NAME.new(name).tap do |res|
         raise NameError, "Invalid color name given" unless res.name
       end
+    end
+
+    def new_by_composed_rgb(op, other)
+      rgb = self.rgb.send(op, other.rgb)
+      self.class.new(rgb).tap { |c| c.mode = self.mode }
     end
   end
 end

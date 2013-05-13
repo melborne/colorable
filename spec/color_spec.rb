@@ -237,17 +237,22 @@ describe Color do
       it { @c.to_s.should eql "hsb(250,10,80)" }
     end
 
-    context "plus a color object" do
-      before do
-        @c1 = Color.new :red
-        @c2 = Color.new :white
-        @c3 = Color.new [0, 255, 255]
-        @c4 = Color.new [0, 100, 255]
+    context "pass a RGB object" do
+      before(:each) do
+        @a = Color.new('Red')
+        @b = Color.new('Green')
+        @c = Color.new('Blue')
+        @d = Color.new([255, 0, 0])
+        @e = Color.new([0, 255, 0])
+        @f = Color.new([0, 0, 255])
       end
-      it { (@c1 + @c2).to_s.should eql 'White' }
-      it { (@c3 + @c4).to_s.should eql 'rgb(0,255,255)' }
-      it { (@c1 + @c3).to_s.should eql 'White' }
-      it { (@c4 + @c1).to_s.should eql 'rgb(255,100,255)' }
+      it { (@a + @b).to_s.should eql "Yellow" }
+      it { (@b + @c).to_s.should eql "Aqua" }
+      it { (@a + @c).to_s.should eql "Fuchsia" }
+      it { (@a + @b + @c).to_s.should eql "White" }
+      it { (@e + @a).to_s.should eql "rgb(255,255,0)" }
+      it { (@f + @b).to_s.should eql "rgb(0,255,255)" }
+      it { (@d + @e + @f).to_s.should eql "rgb(255,255,255)" }
     end
   end
 
@@ -278,17 +283,62 @@ describe Color do
       it { @c2.to_s.should eql "hsb(250,10,80)" }
     end
 
-    context "minus a color object" do
-      before do
-        @c1 = Color.new :red
-        @c2 = Color.new :white
-        @c3 = Color.new [0, 255, 255]
-        @c4 = Color.new [0, 100, 255]
+    context "pass a RGB object" do
+      before(:each) do
+        @a = Color.new('Red')
+        @b = Color.new('Green')
+        @c = Color.new('Blue')
+        @d = Color.new([255, 0, 0])
+        @e = Color.new([0, 255, 0])
+        @f = Color.new([0, 0, 255])
       end
-      it { (@c1 - @c2).to_s.should eql 'Red' }
-      it { (@c3 - @c4).to_s.should eql 'rgb(0,100,255)' }
-      it { (@c1 - @c3).to_s.should eql 'Black' }
-      it { (@c4 - @c1).to_s.should eql 'rgb(0,0,0)' }
+      it { (@a - @b).to_s.should eql "Black" }
+      it { (@b - @c).to_s.should eql "Black" }
+      it { (@a - @c).to_s.should eql "Black" }
+      it { (@a - @b - @c).to_s.should eql "Black" }
+      it { (@e - @a).to_s.should eql "rgb(0,0,0)" }
+      it { (@f - @b).to_s.should eql "rgb(0,0,0)" }
+      it { (@d - @e - @f).to_s.should eql "rgb(0,0,0)" }
+    end
+  end
+
+  describe "#*" do
+    context "pass a RGB object" do
+      before(:each) do
+        @a = Color.new('Red')
+        @b = Color.new('Green')
+        @c = Color.new('Blue')
+        @d = Color.new([255, 0, 0])
+        @e = Color.new([0, 255, 0])
+        @f = Color.new([0, 0, 255])
+      end
+      it { (@a * @b).to_s.should eql "Black" }
+      it { (@b * @c).to_s.should eql "Black" }
+      it { (@a * @c).to_s.should eql "Black" }
+      it { (@a * @b * @c).to_s.should eql "Black" }
+      it { (@e * @a).to_s.should eql "rgb(0,0,0)" }
+      it { (@f * @b).to_s.should eql "rgb(0,0,0)" }
+      it { (@d * @e * @f).to_s.should eql "rgb(0,0,0)" }
+    end
+  end
+
+  describe "#/" do
+    context "pass a RGB object" do
+      before(:each) do
+        @a = Color.new('Red')
+        @b = Color.new('Green')
+        @c = Color.new('Blue')
+        @d = Color.new([255, 0, 0])
+        @e = Color.new([0, 255, 0])
+        @f = Color.new([0, 0, 255])
+      end
+      it { (@a / @b).to_s.should eql "Yellow" }
+      it { (@b / @c).to_s.should eql "Aqua" }
+      it { (@a / @c).to_s.should eql "Fuchsia" }
+      it { (@a / @b / @c).to_s.should eql "White" }
+      it { (@e / @a).to_s.should eql "rgb(255,255,0)" }
+      it { (@f / @b).to_s.should eql "rgb(0,255,255)" }
+      it { (@d / @e / @f).to_s.should eql "rgb(255,255,255)" }
     end
   end
 
