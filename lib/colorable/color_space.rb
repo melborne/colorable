@@ -50,26 +50,34 @@ module Colorable
 		alias :blue :b
 		alias :to_a :rgb
 
-		# Pass Array of [r, g, b], a Fixnum or a RGB object.
-		# Returns new RGB object with added RGB.
+		# Color addition
+    #
+    # +other+ can be:
+    #   RGB object: apply minimum compositing
+    #   Array of RGB values: each values added to each of RGBs.
+    #   Fixnum: other number added to all of RGBs.
 		def +(other)
 			rgb =
 				case other
-				when Fixnum
-					compound_by([other] * 3) { |a, b| (a + b) % 256 }
+        when RGB
+          compound_by(other.rgb) { |a, b| [a+b, 255].min }
 				when Array
 					raise ArgumentError, "Invalid size of Array given" unless other.size==3
 					compound_by(other) { |a, b| (a + b) % 256 }
-        when RGB
-          compound_by(other.rgb) { |a, b| [a+b, 255].min }
+				when Fixnum
+					compound_by([other] * 3) { |a, b| (a + b) % 256 }
 				else
 					raise ArgumentError, "Invalid argument given"
 				end
 			self.class.new *rgb
 		end
 
-		# Pass Array of [r, g, b], a Fixnum or a RGB object.
-		# Returns new RGB object with subtructed RGB.
+		# Color subtruction
+    #
+    # +other+ can be:
+    #   RGB object: apply maximum compositing
+    #   Array of RGB values: each values added to each of RGBs.
+    #   Fixnum: other number added to all of RGBs.
     def -(other)
       case other
       when RGB
@@ -80,12 +88,22 @@ module Colorable
       end
     end
 
+    # Color multiplication
+    #
+    # +other+ should be a Color object.
+    # It applies multiply compositing
     def *(other)
+      raise ArgumentError, "Invalid argument given" unless other.is_a?(RGB)
       rgb = compound_by(other.rgb) { |a, b| [(a*b/255.0).round, 0].max }
       self.class.new *rgb
     end
 
+    # Color division
+    #
+    # +other+ should be a Color object.
+    # It applies screen compositing
     def /(other)
+      raise ArgumentError, "Invalid argument given" unless other.is_a?(RGB)
       rgb = compound_by(other.rgb) { |a, b| [a+b-(a*b/255.0).round, 255].min }
       self.class.new *rgb
     end
