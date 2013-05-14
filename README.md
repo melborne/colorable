@@ -1,7 +1,11 @@
 # Colorable
 
-Colorable is a color handler written in Ruby which include Color and Colorset classes.
-A color object provide a conversion between X11 colorname, RGB, HSB and HEX or other manipulations. a colorset object represent X11 colorset which can be manipulated like enumerable object.
+Colorable is a color handler written in Ruby, which has following functionalities;
+
+    1. Color conversion: convertible between X11 colorname, HEX, RGB and HSB values.
+    2. Color composition: a color object can be composible using math operators.
+    3. Color enumeration: a color object can be enumerable within X11 colors.
+    4. Color mode: a color object has a mode which represent output state of the color.
 
 ## Installation
 
@@ -19,119 +23,145 @@ Or install it yourself as:
 
 ## Usage
 
+
 Create a color object:
 
     require "colorable"
     include Colorable
 
-    # with a X11 colorname
-    c = Color.new :lime_green
-    c.to_s #=> "Lime Green"
-    c.rgb.to_a #=> [50, 205, 50]
-    c.hsb.to_a #=> [120, 76, 80]
-    c.hex.to_s #=> "#32CD32"
-    c.dark? #=> false
+    # from a X11 colorname
+    Color.new 'Alice Blue' # => #<Colorable::Color 'Alice Blue<rgb(240,248,255)/hsb(208,6,100)/#F0F8FF>'>
 
-    # with Array of RGB values
-    c = Color.new [50, 205, 50]
-    c.to_s #=> "rgb(50,205,50)"
-    c.name.to_s #=> "Lime Green"
-    c.hsb.to_a #=> [120, 76, 80]
-    c.hex.to_s #=> "#32CD32"
+    # from a HEX string
+    Color.new '#F0F8FF' # => #<Colorable::Color 'Alice Blue<rgb(240,248,255)/hsb(208,6,100)/#F0F8FF>'>
 
-    # with a HEX string
-    c = Color.new '#32CD32'
-    c.to_s #=> "#32CD32"
+    # from RGB values
+    Color.new [240, 248, 255] # => #<Colorable::Color 'Alice Blue<rgb(240,248,255)/hsb(208,6,100)/#F0F8FF>'>
 
-    # with a RGB, HSB or HEX object
-    c = Color.new RGB.new(50, 205, 50)
-    c = Color.new HSB.new(120, 76, 80)
-    c = Color.new HEX.new('#32CD32')
+    # from a HSB object
+    Color.new HSB.new(208, 6, 100) # => #<Colorable::Color 'Alice Blue<rgb(240,248,255)/hsb(208,6,100)/#F0F8FF>'>
 
-Manipulate color object:
+    # using #to_color methods
 
-    c = Color.new :lime_green
+    'Alice Blue'.to_color # => #<Colorable::Color 'Alice Blue<rgb(240,248,255)/hsb(208,6,100)/#F0F8FF>'>
 
-    c.to_s #=> "Lime Green"
-    c.rgb.to_a #=> [50, 205, 50]
-    c.hsb.to_a #=> [120, 76, 80]
-    c.hex.to_s #=> "#32CD32"
-    c.dark? #=> false
+    :alice_blue.to_color # => #<Colorable::Color 'Alice Blue<rgb(240,248,255)/hsb(208,6,100)/#F0F8FF>'>
 
-    # info returns information of the color
-    c.info #=> {:NAME=>"Lime Green", :RGB=>[50, 205, 50], :HSB=>[120, 76, 80], :HEX=>"#32CD32", :MODE=>:NAME, :DARK=>false}
+    '#f0f8ff'.to_color # => #<Colorable::Color 'Alice Blue<rgb(240,248,255)/hsb(208,6,100)/#F0F8FF>'>
 
-    # next, prev returns next, prev color object in X11 color sequence
-    c.next.to_s #=> "Linen"
-    c.next(2).to_s #=> "Magenta"
-    c.prev.to_s #=> "Lime"
-    c.prev(2).to_s #=> "Light Yellow"
+    [240, 248, 255].to_color # => #<Colorable::Color 'Alice Blue<rgb(240,248,255)/hsb(208,6,100)/#F0F8FF>'>
 
-    # +, - returns incremented or decremented color object
-    (c + 1).to_s #=> "Linen"
-    (c + 2).to_s #=> "Magenta"
-    (c - 1).to_s #=> "Lime"
-    (c - 2).to_s #=> "Light Yellow"
+    0xf0f8ff.to_color # => #<Colorable::Color 'Alice Blue<rgb(240,248,255)/hsb(208,6,100)/#F0F8FF>'>
 
-Color object has a mode which represent output mode of the color. Behaviours of `#to_s`, `next`, `prev`, `+`, `-` will be changed based on the mode. You can change the mode with `#mode=` between :NAME, :RGB, :HSB, :HEX.
 
-    c = Color.new 'Lime Green'
-    c.mode = :NAME
-    c.to_s #=> "Lime Green"
-    c.next.to_s #=> "Linen"
+Color conversion:
+
+    c = Color.new :alice_blue
+
+    c.name # => "Alice Blue"
+    c.rgb  # => [240, 248, 255]
+    c.hsb  # => [208, 6, 100]
+    c.hex  # => "#F0F8FF"
+    c.dark?     # => false
+    c.info # => {:name=>"Alice Blue", :rgb=>[240, 248, 255], :hsb=>[208, 6, 100], :hex=>"#F0F8FF", :mode=>:NAME, :dark=>false}
+
+    [240, 248, 255].to_color.hex # => "#F0F8FF"
+    [240, 248, 255].to_color.hsb # => [208, 6, 100]
+
+
+Color composition:
+
+    red = Color.new :red
+    green = Color.new :green
+    blue = Color.new :blue
+
+    yellow = red + green
+    yellow.info # => {:name=>"Yellow", :rgb=>[255, 255, 0], :hsb=>[60, 100, 100], :hex=>"#FFFF00", :mode=>:NAME, :dark=>false}
+
+    red + blue # => #<Colorable::Color 'Fuchsia<rgb(255,0,255)/hsb(300,100,100)/#FF00FF>'>
+
+    green + blue # => #<Colorable::Color 'Aqua<rgb(0,255,255)/hsb(180,100,100)/#00FFFF>'>
+
+    red + green + blue # => #<Colorable::Color 'White<rgb(255,255,255)/hsb(0,0,100)/#FFFFFF>'>
+
+    red - green # => #<Colorable::Color 'Black<rgb(0,0,0)/hsb(0,0,0)/#000000>'>
+    red * green # => #<Colorable::Color 'Black<rgb(0,0,0)/hsb(0,0,0)/#000000>'>
+    red / green # => #<Colorable::Color 'Yellow<rgb(255,255,0)/hsb(60,100,100)/#FFFF00>'>
+
+Color enumeration:
+
+    c = Color.new :alice_blue
+    
+    c.next # => #<Colorable::Color 'Antique White<rgb(250,235,215)/hsb(35,14,98)/#FAEBD7>'>
+    c.next(10) # => #<Colorable::Color 'Blue Violet<rgb(138,43,226)/hsb(271,81,89)/#8A2BE2>'>
+
+    c.prev # => #<Colorable::Color 'Yellow Green<rgb(154,205,50)/hsb(79,76,80)/#9ACD32>'>
+    c.prev(10) # => #<Colorable::Color 'Teal<rgb(0,128,128)/hsb(180,100,50)/#008080>'>
+
+    c + 1 # => #<Colorable::Color 'Antique White<rgb(250,235,215)/hsb(35,14,98)/#FAEBD7>'>
+    c + 10 # => #<Colorable::Color 'Blue Violet<rgb(138,43,226)/hsb(271,81,89)/#8A2BE2>'>
+    c - 1 # => #<Colorable::Color 'Yellow Green<rgb(154,205,50)/hsb(79,76,80)/#9ACD32>'>
+    c - 10 # => #<Colorable::Color 'Teal<rgb(0,128,128)/hsb(180,100,50)/#008080>'>
+
+    10.times.map { c = c.next }.map(&:name) # => ["Antique White", "Aqua", "Aquamarine", "Azure", "Beige", "Bisque", "Black", "Blanched Almond", "Blue", "Blue Violet"]
+
+
+Color mode:
+
+    c = Color.new :alice_blue
+    c.mode # => :NAME
+    c.to_s # => "Alice Blue"
+    c.next # => #<Colorable::Color 'Antique White<rgb(250,235,215)/hsb(35,14,98)/#FAEBD7>'>
+    c + 1 # => #<Colorable::Color 'Antique White<rgb(250,235,215)/hsb(35,14,98)/#FAEBD7>'>
 
     c.mode = :RGB
-    c.to_s #=> "rgb(50,205,50)"
-    c.next.to_s #=> "rgb(60,179,113)"
-    c.next.name.to_s #=> "Medium Sea Green"
-    (c + 10).to_s #=> "rgb(60,215,60)"
-    (c + [0, 50, 100]).to_s #=> "rgb(50, 255, 150)"
+    c.to_s # => "rgb(240,248,255)"
+    c.next # => #<Colorable::Color 'Honeydew<rgb(240,255,240)/hsb(120,6,100)/#F0FFF0>'>
+    c + [15, -20, -74] # => #<Colorable::Color 'Moccasin<rgb(255,228,181)/hsb(39,29,100)/#FFE4B5>'>
+    c - 20 # => #<Colorable::Color '<rgb(220,228,235)/hsb(208,6,92)/#DCE4EB>'>
 
-Shortcut for creating a color object with #to_color of String, Symbol and Array:
+    c.mode = :HSB # !> `*' interpreted as argument prefix
+    c.to_s # => "hsb(208,6,100)"
+    c.next # => #<Colorable::Color 'Slate Gray<rgb(112,128,144)/hsb(210,22,56)/#708090>'>
+    c + [152, 94, 0] # => #<Colorable::Color 'Red<rgb(255,0,0)/hsb(0,100,100)/#FF0000>'>
 
-    c = "Lime Green".to_color
-    c.class #=> Colorable::Color
+    c.mode = :HEX
+    c.to_s # => "#F0F8FF"
+    c.next # => #<Colorable::Color 'Honeydew<rgb(240,255,240)/hsb(120,6,100)/#F0FFF0>'>
+    c + 4 # => #<Colorable::Color '<rgb(244,252,3)/hsb(62,99,99)/#F4FC03>'>
 
-    c = :lime_green.to_color
-    c.class #=> Colorable::Color
+Create a X11 Colorset object
 
-    c = "#32CD32".to_color
-    c.class #=> Colorable::Color
+        cs = Colorset.new # => #<Colorable::Colorset 0/144 pos='Alice Blue<rgb(240,248,255)/hsb(208,6,100)>'>
 
-    c = [50, 205, 50].to_color
-    c.class #=> Colorable::Color
+        # with option
+        cs = Colorset.new(order: :RGB) # => #<Colorable::Colorset 0/144 pos='Black<rgb(0,0,0)/hsb(0,0,0)>'>
+        cs = Colorset.new(order: :HSB, dir: :-) # => #<Colorable::Colorset 0/144 pos='Light Pink<rgb(255,182,193)/hsb(352,29,100)>'>
 
-Create a X11 colorset object:
-
-    include Colorable
-
-    cs = Colorset.new #=> #<Colorset 0/144 pos='Alice Blue/rgb(240,248,255)/hsb(208,6,100)'>
-
-    # with option
-    cs = Colorset.new(order: :RGB) #=> #<Colorset 0/144 pos='Black/rgb(0,0,0)/hsb(0,0,0)'>
-    cs = Colorset.new(order: :HSB, dir: :-) #=> #<Colorset 0/144 pos='Light Pink/rgb(255,182,193)/hsb(352,29,100)'>
 
 Manupilate colorset:
 
-    cs = Colorset.new
-    cs.size #=> 144
-    cs.at.to_s #=> "Alice Blue"
-    cs.at(1).to_s #=> "Antique White"
-    cs.at(2).to_s #=> "Aqua"
+        cs = Colorset.new
+        cs.size # => 144
+        cs.at # => #<Colorable::Color 'Alice Blue<rgb(240,248,255)/hsb(208,6,100)/#F0F8FF>'>
+        cs.at.to_s # => "Alice Blue"
+        cs.at(1).to_s # => "Antique White"
+        cs.at(2).to_s # => "Aqua"
 
-    # next(prev) methods moves cursor position
-    cs.next.to_s #=> "Antique White"
-    cs.at.to_s #=> "Antique White"
-    cs.next.to_s #=> "Aqua"
-    cs.at.to_s #=> "Aqua"
-    cs.rewind
-    cs.at.to_s #=> "Alice Blue"
+        # next(prev) methods moves cursor position
+        cs.next.to_s # => "Antique White"
+        cs.at.to_s # => "Antique White"
+        cs.next.to_s # => "Aqua"
+        cs.at.to_s # => "Aqua"
+        cs.rewind
+        cs.at.to_s # => "Alice Blue"
 
-    cs.map(&:to_s).take(10) #=> ["Alice Blue", "Antique White", "Aqua", "Aquamarine", "Azure", "Beige", "Bisque", "Black", "Blanched Almond", "Blue"]
+        cs.map(&:to_s).take(10) # => ["Alice Blue", "Antique White", "Aqua", "Aquamarine", "Azure", "Beige", "Bisque", "Black", "Blanched Almond", "Blue"]
 
-    cs.sort_by(&:rgb).map(&:to_s).take(10) #=> ["Black", "Navy", "Dark Blue", "Medium Blue", "Blue", "Dark Green", "Green2", "Teal", "Dark Cyan", "Deep Sky Blue"]
+        cs.sort_by(&:rgb).take(10).map(&:rgb) # => [[0, 0, 0], [0, 0, 128], [0, 0, 139], [0, 0, 205], [0, 0, 255], [0, 100, 0], [0, 128, 0], [0, 128, 128], [0, 139, 139], [0, 191, 255]]
 
-    cs.sort_by(&:hsb).map(&:to_s).take(10) #=> ["Black", "Dim Gray", "Gray2", "Dark Gray", "Gray", "Silver", "Light Gray", "Gainsboro", "White Smoke", "White"]
+        cs.sort_by(&:hsb).take(10).map(&:hsb) # => [[0, 0, 0], [0, 0, 41], [0, 0, 50], [0, 0, 66], [0, 0, 75], [0, 0, 75], [0, 0, 83], [0, 0, 86], [0, 0, 96], [0, 0, 100]]
+
 
 
 ## Contributing
