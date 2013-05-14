@@ -203,7 +203,7 @@ describe HSB do
       end
 
       it "not raise ArgumentError" do
-        expect { HSB.new(300, 70, 90) + [0, 50, 0] }.not_to raise_error ArgumentError
+        expect { HSB.new(300, 70, 90) + [60, 50, 0] }.not_to raise_error ArgumentError
         expect { HSB.new(300, 70, 90) + [0, 0, -100] }.not_to raise_error ArgumentError
       end
     end

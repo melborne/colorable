@@ -152,7 +152,7 @@ module Colorable
         else
           raise ArgumentError, "Accept only Array of three numbers"
         end
-      new_hsb = self.hsb.zip(arg, [361, 101, 101]).map { |x, y, div| (x + y) % div }
+      new_hsb = self.hsb.zip(arg, [360, 101, 101]).map { |x, y, div| (x + y) % div }
       self.class.new *new_hsb
     end
 
