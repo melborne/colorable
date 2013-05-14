@@ -120,7 +120,7 @@ Color mode:
     c + [15, -20, -74] # => #<Colorable::Color 'Moccasin<rgb(255,228,181)/hsb(39,29,100)/#FFE4B5>'>
     c - 20 # => #<Colorable::Color '<rgb(220,228,235)/hsb(208,6,92)/#DCE4EB>'>
 
-    c.mode = :HSB # !> `*' interpreted as argument prefix
+    c.mode = :HSB
     c.to_s # => "hsb(208,6,100)"
     c.next # => #<Colorable::Color 'Slate Gray<rgb(112,128,144)/hsb(210,22,56)/#708090>'>
     c + [152, 94, 0] # => #<Colorable::Color 'Red<rgb(255,0,0)/hsb(0,100,100)/#FF0000>'>
