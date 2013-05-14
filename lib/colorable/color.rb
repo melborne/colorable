@@ -2,7 +2,6 @@ module Colorable
   class Color
     class NameError < StandardError; end
     include Comparable
-    attr_reader :name, :rgb
 
     # Create a Color object which has several representations of a color.
     #
@@ -24,7 +23,7 @@ module Colorable
 
     # Set output mode.
     def mode=(mode)
-      modes = [rgb, hsb, name, hex]
+      modes = [_rgb, _hsb, _name, _hex]
       @mode = modes.detect { |m| m.class.to_s.match /#{mode}/i } || begin
                 raise ArgumentError, "Invalid mode given"
               end
@@ -35,40 +34,64 @@ module Colorable
     end
 
     def inspect
-      "#<%s '%s<%s/%s/%s>'>" % [self.class, name, rgb, hsb, hex]
+      "#<%s '%s<%s/%s/%s>'>" % [self.class, _name, _rgb, _hsb, _hex]
     end
 
     # Returns information of the color object
     def info
       {
-        name: name.to_s,
-        rgb: rgb.to_a,
-        hsb: hsb.to_a,
-        hex: hex.to_s,
+        name: name,
+        rgb: rgb,
+        hsb: hsb,
+        hex: hex,
         mode: mode,
         dark: dark?
       }
     end
 
+    def _name
+      @name
+    end
+
+    def _rgb
+      @rgb
+    end
+
+    def _hex
+      @hex ||= HEX.new _rgb.to_hex
+    end
+
+    def _hsb
+      @hsb ||= HSB.new *_rgb.to_hsb
+    end
+
+    def name
+      _name.to_s
+    end
+
     def hex
-      @hex ||= HEX.new rgb.to_hex
+      _hex.to_s
+    end
+
+    def rgb
+      _rgb.to_a
     end
 
     def hsb
-      @hsb ||= HSB.new *rgb.to_hsb
+      _hsb.to_a
     end
     alias :hsv :hsb
 
     %w(red green blue).each do |c|
-      define_method(c) { rgb.send c }
+      define_method(c) { _rgb.send c }
     end
 
     %w(hue sat bright).each do |c|
-      define_method(c) { hsb.send c }
+      define_method(c) { _hsb.send c }
     end
 
     def <=>(other)
-      if [self.name, other.name].any?(&:nil?)
+      if [self.name, other.name].any?(&:empty?)
         self.rgb <=> other.rgb
       else
         self.name <=> other.name
@@ -92,7 +115,7 @@ module Colorable
     end
 
     def dark?
-      !!DARK_COLORS.detect { |d| d == name.to_s }
+      !!DARK_COLORS.detect { |d| d == self.name }
     end
 
     # Color addition
@@ -200,7 +223,7 @@ module Colorable
     end
 
     def new_by_composed_rgb(op, other)
-      rgb = self.rgb.send(op, other.rgb)
+      rgb = self._rgb.send(op, other._rgb)
       self.class.new(rgb).tap { |c| c.mode = self.mode }
     end
   end

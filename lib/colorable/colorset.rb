@@ -62,7 +62,7 @@ module Colorable
     end
  
     def to_s
-      "#<%s %d/%d pos='%s<%s/%s>'>" % [self.class, @pos, size, at.name, at.rgb, at.hsb]
+      "#<%s %d/%d pos='%s<%s/%s>'>" % [self.class, @pos, size, at.name, at._rgb, at._hsb]
     end
     alias :inspect :to_s
 
@@ -90,11 +90,11 @@ module Colorable
       order_cond =
         case order
         when *rgb_part
-          ->color{ color.rgb.move_to_top rgb_part.index(order) }
+          ->color{ color._rgb.move_to_top rgb_part.index(order) }
         when *hsb_part
-          ->color{ color.hsb.move_to_top hsb_part.index(order) }
+          ->color{ color._hsb.move_to_top hsb_part.index(order) }
         when :name, :rgb, :hsb, :hsv, :hex
-          ->color{ color.send order }
+          ->color{ color.send "_#{order}" }
         end
 
       case opt[:dir].intern

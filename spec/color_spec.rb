@@ -5,19 +5,19 @@ describe Color do
   describe ".new" do
     context "with a string" do
       context "of valid colorname" do
-        it { Color.new("Alice Blue").name.to_s.should eql "Alice Blue" }
-        it { Color.new("Khaki").name.to_s.should eql "Khaki" }
-        it { Color.new("Mint Cream").name.to_s.should eql "Mint Cream" }
-        it { Color.new("Thistle").name.to_s.should eql "Thistle" }
+        it { Color.new("Alice Blue").name.should eql "Alice Blue" }
+        it { Color.new("Khaki").name.should eql "Khaki" }
+        it { Color.new("Mint Cream").name.should eql "Mint Cream" }
+        it { Color.new("Thistle").name.should eql "Thistle" }
       end
 
       context "of valid name variations" do
-        it { Color.new("AliceBlue").name.to_s.should eql "Alice Blue" }
-        it { Color.new("aliceblue").name.to_s.should eql "Alice Blue" }
-        it { Color.new("aliceblue").name.to_s.should eql "Alice Blue" }
-        it { Color.new(:AliceBlue).name.to_s.should eql "Alice Blue" }
-        it { Color.new(:aliceblue).name.to_s.should eql "Alice Blue" }
-        it { Color.new(:alice_blue).name.to_s.should eql "Alice Blue" }
+        it { Color.new("AliceBlue").name.should eql "Alice Blue" }
+        it { Color.new("aliceblue").name.should eql "Alice Blue" }
+        it { Color.new("aliceblue").name.should eql "Alice Blue" }
+        it { Color.new(:AliceBlue).name.should eql "Alice Blue" }
+        it { Color.new(:aliceblue).name.should eql "Alice Blue" }
+        it { Color.new(:alice_blue).name.should eql "Alice Blue" }
       end
 
       context "of invalid name" do
@@ -30,9 +30,9 @@ describe Color do
 
     context "with a HEX string" do
       context "of valid HEX" do
-        it { Color.new("#FFFFFF").hex.to_s.should eql "#FFFFFF" }
-        it { Color.new("#00F").hex.to_s.should eql "#0000FF" }
-        it { Color.new("000000").hex.to_s.should eql "#000000" }
+        it { Color.new("#FFFFFF").hex.should eql "#FFFFFF" }
+        it { Color.new("#00F").hex.should eql "#0000FF" }
+        it { Color.new("000000").hex.should eql "#000000" }
       end
 
       context "of invalid HEX" do
@@ -45,10 +45,10 @@ describe Color do
 
     context "with an array" do
       context "of valid RGB value" do
-        it { Color.new([240, 248, 255]).rgb.to_a.should eql [240, 248, 255] }
-        it { Color.new([240, 230, 140]).rgb.to_a.should eql [240, 230, 140] }
-        it { Color.new([245, 255, 250]).rgb.to_a.should eql [245, 255, 250] }
-        it { Color.new([216, 191, 216]).rgb.to_a.should eql [216, 191, 216] }
+        it { Color.new([240, 248, 255]).rgb.should eql [240, 248, 255] }
+        it { Color.new([240, 230, 140]).rgb.should eql [240, 230, 140] }
+        it { Color.new([245, 255, 250]).rgb.should eql [245, 255, 250] }
+        it { Color.new([216, 191, 216]).rgb.should eql [216, 191, 216] }
       end
 
       context "of invalid RGB value" do
@@ -60,24 +60,31 @@ describe Color do
     end
 
     context "with a RGB or HSB object" do
-      it { Color.new(RGB.new 240, 248, 255).name.to_s.should eql "Alice Blue" }
-      it { Color.new(HSB.new 208, 6, 100).name.to_s.should eql "Alice Blue" }
-      it { Color.new(HEX.new '#F0F8FF').name.to_s.should eql "Alice Blue" }
+      it { Color.new(RGB.new 240, 248, 255).name.should eql "Alice Blue" }
+      it { Color.new(HSB.new 208, 6, 100).name.should eql "Alice Blue" }
+      it { Color.new(HEX.new '#F0F8FF').name.should eql "Alice Blue" }
     end
   end
 
+  describe "#_name,#_hex,#_rgb,#_hsb" do
+    it { Color.new("Alice Blue")._name.should be_instance_of NAME }
+    it { Color.new("Alice Blue")._hex.should be_instance_of HEX }
+    it { Color.new("Alice Blue")._rgb.should be_instance_of RGB }
+    it { Color.new("Alice Blue")._hsb.should be_instance_of HSB }
+  end
+
   describe "#hex" do
-    it { Color.new("Alice Blue").hex.to_s.should eql "#F0F8FF" }
-    it { Color.new("Khaki").hex.to_s.should eql "#F0E68C" }
-    it { Color.new("Mint Cream").hex.to_s.should eql "#F5FFFA" }
-    it { Color.new("Thistle").hex.to_s.should eql "#D8BFD8" }
+    it { Color.new("Alice Blue").hex.should eql "#F0F8FF" }
+    it { Color.new("Khaki").hex.should eql "#F0E68C" }
+    it { Color.new("Mint Cream").hex.should eql "#F5FFFA" }
+    it { Color.new("Thistle").hex.should eql "#D8BFD8" }
   end
 
   describe "#hsb" do
-    it { Color.new("Alice Blue").hsb.to_a.should eql [208, 6, 100] }
-    it { Color.new("Khaki").hsb.to_a.should eql [55, 42, 94] }
-    it { Color.new("Mint Cream").hsb.to_a.should eql [150, 4, 100] }
-    it { Color.new("Thistle").hsb.to_a.should eql [300, 12, 85] }
+    it { Color.new("Alice Blue").hsb.should eql [208, 6, 100] }
+    it { Color.new("Khaki").hsb.should eql [55, 42, 94] }
+    it { Color.new("Mint Cream").hsb.should eql [150, 4, 100] }
+    it { Color.new("Thistle").hsb.should eql [300, 12, 85] }
   end
 
   describe '#red, #green, #blue, #hue, #sat, #bright' do
@@ -119,7 +126,7 @@ describe Color do
     end
 
     context "when color is not in X11 colorset" do
-      it { Color.new([100,10,10]).name.should be_nil }
+      it { Color.new([100,10,10]).name.should be_empty }
     end
   end
 
@@ -152,7 +159,7 @@ describe Color do
     end
 
     context "when color is not in X11 colorset" do
-      it { Color.new([100,10,10]).name.should be_nil }
+      it { Color.new([100,10,10]).name.should be_empty }
     end
   end
 
