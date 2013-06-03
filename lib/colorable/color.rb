@@ -1,6 +1,5 @@
 module Colorable
   class Color
-    class NameError < StandardError; end
     include Comparable
 
     # Create a Color object which has several representations of a color.
