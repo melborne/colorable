@@ -133,6 +133,7 @@ module Colorable
   class HSB < ColorSpace
     attr_accessor :hsb, :h, :s, :b
     def initialize(h=0,s=0,b=0)
+      h=0 if h==360
       @h, @s, @b = @hsb = validate_hsb([h, s, b])
     end
     alias :hue :h
@@ -300,6 +301,6 @@ module Colorable
       } || begin
         raise ArgumentError, "'#{name}' is not in X11 colorset."
       end
-    end 
+    end
   end
-end  
+end
