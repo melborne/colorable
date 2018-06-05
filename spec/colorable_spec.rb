@@ -51,14 +51,14 @@ describe Colorable do
     end
   end
 
-  describe "Fixnum#to_color" do
-    context "apply a hex Fixnum" do
+  describe "Integer#to_color" do
+    context "apply a hex Integer" do
       subject { 0x32CD32.to_color }
       it { should be_instance_of Colorable::Color }
       its(:to_s) { should eql "#32CD32" }
     end
 
-    context "apply a invalid Fixnum" do
+    context "apply a invalid Integer" do
       it "raise ArgumentError" do
         expect { 323232.to_color }.to raise_error ArgumentError
       end

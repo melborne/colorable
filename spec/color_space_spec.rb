@@ -51,7 +51,7 @@ describe RGB do
       end
     end
 
-    context "pass a Fixnum" do
+    context "pass a Integer" do
       before(:all) { @rgb = RGB.new(100, 100, 100) }
       it { (@rgb + 50).rgb.should eql [150, 150, 150] }
       it "not raise ArgumentError" do
@@ -59,7 +59,7 @@ describe RGB do
       end
     end
 
-    context "coerce make Fixnum#+ accept rgb object" do
+    context "coerce make Integer#+ accept rgb object" do
       it { (10 + RGB.new(100, 100, 100)).rgb.should eql [110, 110, 110] }
     end
 
@@ -93,7 +93,7 @@ describe RGB do
       end
     end
 
-    context "pass a Fixnum" do
+    context "pass a Integer" do
       before(:all) { @rgb = RGB.new(100, 100, 100) }
       it { (@rgb - 50).rgb.should eql [50, 50, 50] }
       it "not raise ArgumentError" do
@@ -270,13 +270,13 @@ describe NAME do
       end
     end
 
-    context "pass a Fixnum" do
+    context "pass a Integer" do
       before(:all) { @name = NAME.new(:alice_blue) }
       it { (@name + 1).name.should eql 'Antique White' }
       it { (@name + 2).name.should eql 'Aqua' }
     end
 
-    context "coerce make Fixnum#+ accept name object" do
+    context "coerce make Integer#+ accept name object" do
       it { (1 + NAME.new(:alice_blue)).to_s.should eql 'Antique White' }
     end
   end
@@ -288,13 +288,13 @@ describe NAME do
       end
     end
 
-    context "pass a Fixnum" do
+    context "pass a Integer" do
       before(:all) { @name = NAME.new(:alice_blue) }
       it { (@name - 1).name.should eql 'Yellow Green' }
       it { (@name - 2).name.should eql 'Yellow' }
     end
 
-    context "coerce make Fixnum#+ accept name object" do
+    context "coerce make Integer#+ accept name object" do
       it { (1 - NAME.new(:alice_blue)).to_s.should eql 'Yellow Green' }
     end
   end
@@ -361,7 +361,7 @@ describe HEX do
       end
     end
 
-    context "pass a Fixnum" do
+    context "pass a Integer" do
       before(:all) { @hex = HEX.new('#000000') }
       it { (@hex + 255).hex.should eql '#FFFFFF' }
       it "not raise ArgumentError" do
@@ -369,7 +369,7 @@ describe HEX do
       end
     end
 
-    context "coerce make Fixnum#+ accept hex object" do
+    context "coerce make Integer#+ accept hex object" do
       it { (255 + HEX.new('#000000')).hex.should eql '#FFFFFF' }
     end
   end
@@ -397,7 +397,7 @@ describe HEX do
       end
     end
 
-    context "pass a Fixnum" do
+    context "pass a Integer" do
       before(:all) { @hex = HEX.new('#FFFFFF') }
       it { (@hex - 255).hex.should eql '#000000' }
       it "not raise ArgumentError" do
@@ -405,7 +405,7 @@ describe HEX do
       end
     end
 
-    context "coerce make Fixnum#+ accept hex object" do
+    context "coerce make Integer#+ accept hex object" do
       it { (255 - HEX.new('#FFFFFF')).hex.should eql '#000000' }
     end
   end

@@ -121,7 +121,7 @@ module Colorable
     #
     # +other+ can be:
     #   Color object: apply minimum compositing with its RGBs.
-    #   Array of values or Fixnum: addiction applies based on its color mode.
+    #   Array of values or Integer: addiction applies based on its color mode.
     def +(other)
       case other
       when Color
@@ -135,7 +135,7 @@ module Colorable
     #
     # +other+ can be:
     #   Color object: apply maximum compositing with its RGBs.
-    #   Array of values or Fixnum: subtruction applies based on its color mode.
+    #   Array of values or Integer: subtruction applies based on its color mode.
     def -(other)
       case other
       when Color

@@ -17,7 +17,7 @@ module Colorable
     end
 
     def -(arg)
-      arg = arg.is_a?(Fixnum) ? -arg : arg.map(&:-@)
+      arg = arg.is_a?(Integer) ? -arg : arg.map(&:-@)
       self + arg
     end
 
@@ -55,7 +55,7 @@ module Colorable
     # +other+ can be:
     #   RGB object: apply minimum compositing.
     #   Array of RGB values: each values added to each of RGBs.
-    #   Fixnum: other number added to all of RGBs.
+    #   Integer: other number added to all of RGBs.
     def +(other)
       rgb =
         case other
@@ -64,7 +64,7 @@ module Colorable
         when Array
           raise ArgumentError, "Invalid size of Array given" unless other.size==3
           compound_by(other) { |a, b| (a + b) % 256 }
-        when Fixnum
+        when Integer
           compound_by([other] * 3) { |a, b| (a + b) % 256 }
         else
           raise ArgumentError, "Invalid argument given"
@@ -77,7 +77,7 @@ module Colorable
     # +other+ can be:
     #   RGB object: apply maximum compositing.
     #   Array of RGB values: each values added to each of RGBs.
-    #   Fixnum: other number added to all of RGBs.
+    #   Integer: other number added to all of RGBs.
     def -(other)
       case other
       when RGB
@@ -133,6 +133,7 @@ module Colorable
   class HSB < ColorSpace
     attr_accessor :hsb, :h, :s, :b
     def initialize(h=0,s=0,b=0)
+      h=0 if h==360
       @h, @s, @b = @hsb = validate_hsb([h, s, b])
     end
     alias :hue :h
@@ -141,7 +142,7 @@ module Colorable
     alias :to_a :hsb
     undef :coerce
 
-    # Pass Array of [h, s, b] or a Fixnum.
+    # Pass Array of [h, s, b] or a Integer.
     # Returns new HSB object with added HSB.
     def +(arg)
       arg =
@@ -232,12 +233,12 @@ module Colorable
     def build_hex_with(op, arg)
       _rgb =
         case arg
-        when Fixnum
+        when Integer
           [arg] * 3
         when String
           hex2rgb(validate_hex arg)
         else
-          raise ArgumentError, "Accept only a Hex string or a Fixnum"
+          raise ArgumentError, "Accept only a Hex string or a Integer"
         end 
       rgb = hex2rgb(self.hex).zip(_rgb).map { |x, y| (x.send(op, y)) % 256 }
       self.class.new rgb2hex(rgb)
@@ -267,13 +268,13 @@ module Colorable
     end
 
     def +(n)
-      raise ArgumentError, 'Only accept a Fixnum' unless n.is_a?(Fixnum)
+      raise ArgumentError, 'Only accept a Integer' unless n.is_a?(Integer)
       pos = COLORNAMES.find_index{|n,_| n==self.name} + n
       self.class.new COLORNAMES.at(pos % COLORNAMES.size)[0]
     end
 
     def -(n)
-      raise ArgumentError, 'Only accept a Fixnum' unless n.is_a?(Fixnum)
+      raise ArgumentError, 'Only accept a Integer' unless n.is_a?(Integer)
       self + -n
     end
 
@@ -300,6 +301,6 @@ module Colorable
       } || begin
         raise ArgumentError, "'#{name}' is not in X11 colorset."
       end
-    end 
+    end
   end
-end  
+end

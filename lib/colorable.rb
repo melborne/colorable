@@ -12,10 +12,10 @@ module Colorable
 
 end
 
-[String, Symbol, Array, Fixnum].each do |klass|
+[String, Symbol, Array, Integer].each do |klass|
   klass.class_eval do
     define_method(:to_color) do
-      Colorable::Color.new (klass==Fixnum ? self.to_s(16) : self)
+      Colorable::Color.new (klass==Integer ? self.to_s(16) : self)
     end
   end
 end
